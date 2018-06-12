@@ -10,7 +10,9 @@ class Puestos(models.Model):
         super(Puestos, self).save(*args, **kwargs)
 
     def __str__(self):
-        return str(self.Puesto)
+        puestolow = self.Puesto
+        puesto = puestolow[0].upper() + puestolow[1:]
+        return str(puesto)
 
     def get_absolute_url(self):
         return reverse('PuestoViewEditar', args = [self.id])
