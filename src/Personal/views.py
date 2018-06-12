@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from Personal.models import Puestos
-from Personal.forms import PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar
+from Personal.forms import(
+    PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
+    AreaInputForm, AreaInputFormGuardar
+)
 
 class PuestoView(View):
     def get(self, request, *args, **kwargs):
@@ -71,3 +74,24 @@ class PuestoViewEditar(View):
             else:
                 return redirect('/persona/puesto/')
         return render(request, 'Personal/editar-puesto.html', context)
+
+class AreaView(View):
+    def context_contructor(*args, **kwargs):
+        context = {
+            'title' :   args[1],
+            'form'  :   args[2]
+        }
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.context_contructor('Areas', AreaInputForm())
+        return render(request, 'Personal/area.html', context)
+
+    def post(self, request, *args, **kwargs):
+        context = self.context_contructor('areas', AreaInputForm())
+        if 'btn-guardar' in request.POST:
+            form = AreaInputFormGuardar(request.POST)
+            if form.is_valid():
+                print('GG')
+            context = self.context_contructor('areasss', form)
+        return render(request, 'Personal/area.html', context)

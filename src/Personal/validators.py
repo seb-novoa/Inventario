@@ -27,3 +27,9 @@ def value_exists(value):
     if puesto == None:
         raise ValidationError('Este puesto no existe')
     return value
+
+def value_is_number(value):
+    if type(value) != int:
+        print('<------------------------------>hell')
+        raise ValidationError('El centro de costo tiene que ser un número')
+    return value

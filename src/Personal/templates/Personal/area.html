@@ -1,0 +1,18 @@
+<div class="">
+  <h1>{{ title }}</h1>
+  <form class="" action="." method="POST">{% csrf_token %}
+    <div class="">
+      {{ form.CDC }}
+      <button type="button" name="button">Buscar</button>
+    </div>
+    <br>
+    {{ form.Area }}
+    <div class="">
+
+      <button type="submit" name="btn-guardar">Guardar</button>
+      <button type="submit" name="btn-editar">Editar</button>
+    </div>
+    <button type="submit" name="btn-eliminar">Eliminar</button>
+    {{ form.errors }}
+  </form>
+</div>

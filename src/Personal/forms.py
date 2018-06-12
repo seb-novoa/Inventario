@@ -1,6 +1,6 @@
 from django import forms
 
-from .validators import value_is_already_exists, value_exists
+from .validators import value_is_already_exists, value_exists, value_is_number
 
 class PuestosInputForm(forms.Form):
     Puesto = forms.CharField( validators = [value_exists])
@@ -16,3 +16,15 @@ class PuestosInputFormEditar(PuestosInputForm):
 
 class PuestosInputFormGuardar(PuestosInputForm):
     Puesto = forms.CharField()
+
+
+class AreaInputForm(forms.Form):
+    CDC = forms.IntegerField(
+        validators = [value_is_number],
+        widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}
+        ))
+    Area = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Area'}))
+
+class AreaInputFormGuardar(AreaInputForm):
+        CDC = forms.IntegerField(validators = [value_is_number],widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}))
+        Area = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Area'}))
