@@ -20,7 +20,7 @@ def value_is_already_exists(value):
 def value_exists(value):
     try:
         from Personal.models import Puestos
-        puesto = Puestos.objects.get(Puesto = value)
+        puesto = Puestos.objects.get(Puesto = value.lower())
     except:
         puesto = None
 
