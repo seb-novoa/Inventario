@@ -16,3 +16,7 @@ class Puestos(models.Model):
 
     def get_absolute_url(self):
         return reverse('PuestoViewEditar', args = [self.id])
+
+class Areas(models.Model):
+    CDC     = models.IntegerField(unique = True)
+    Area    = models.CharField(max_length = 30, unique = True)

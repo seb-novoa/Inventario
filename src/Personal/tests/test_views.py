@@ -8,7 +8,8 @@ class PuestoView(TestCase):
 
     def test_PuestoView_create_a_puesto(self):
         response = self.client.post('/persona/puesto/', data = {
-            'Puesto' : 'puesto'
+            'Puesto' : 'puesto',
+            'btn-guardar' : ['']
         })
         self.assertEqual(Puestos.objects.count(), 1)
 
@@ -17,6 +18,7 @@ class PuestoView(TestCase):
             'Puesto' : 'puesto'
         })
         response = self.client.post('/persona/puesto/', data = {
-            'Puesto' : 'Puesto'
+            'Puesto' : 'Puesto',
+            'btn-guardar' : ['']
         })
         self.assertEqual(Puestos.objects.count(), 1)
