@@ -15,4 +15,13 @@
     <button type="submit" name="btn-eliminar">Eliminar</button>
     {{ form.errors }}
   </form>
+
+  <div class="">
+    {% for area in areas %}
+      <div class="">
+        {{area.CDC}}
+        {{area.Area}}
+      </div>
+    {% endfor %}
+  </div>
 </div>
