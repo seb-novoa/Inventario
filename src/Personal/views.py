@@ -4,7 +4,7 @@ from django.views import View
 from Personal.models import Puestos, Areas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
-    AreaInputForm
+    AreaInputForm, AreaInputFormBuscar
 )
 
 class PuestoView(View):
@@ -83,23 +83,40 @@ class AreaView(View):
         }
         return context
 
+    def objecto(self, value):
+        try:
+            value = int(value)
+        except:
+            pass
+        if type(value) == int:
+            obj = Areas.objects.get(CDC = value)
+        else:
+            obj = Areas.objects.get(Area = value)
+
+        return obj
+
     def all_areas(self):
         areas = Areas.objects.all()
         return areas
 
     def get(self, request, *args, **kwargs):
-        context = self.context_contructor('Areas', AreaInputForm())
+        context = self.context_contructor('Areas', AreaInputFormBuscar())
         context['areas'] = self.all_areas()
         return render(request, 'Personal/area.html', context)
 
-    # def post(self, request, *args, **kwargs):
-    #     context = self.context_contructor('areas', AreaInputForm())
-    #     if 'btn-guardar' in request.POST:
-    #         form = AreaInputForm(request.POST)
-    #         if form.is_valid():
-    #             print('GG<-----------------------')
-    #         context = self.context_contructor('Areas', form)
-    #     return render(request, 'Personal/area.html', context)
+    def post(self, request, *args, **kwargs):
+        context = self.context_contructor('Areas', AreaInputFormBuscar())
+
+
+        if 'btn-buscar' in request.POST:
+            form = AreaInputFormBuscar(request.POST)
+            context = self.context_contructor('Area buscando....', form)
+            if form.is_valid():
+                obj = self.objecto(form.cleaned_data.get('Buscar'))
+                context['obj'] = obj
+
+        context['areas'] = self.all_areas()
+        return render(request, 'Personal/area.html', context)
 
 class AreaViewGuardar(AreaView):
     template = 'Personal/area-guardar.html'

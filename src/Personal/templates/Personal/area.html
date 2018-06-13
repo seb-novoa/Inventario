@@ -2,26 +2,34 @@
   <h1>{{ title }}</h1>
   <form class="" action="." method="POST">{% csrf_token %}
     <div class="">
-      {{ form.CDC }}
-      <button type="button" name="button">Buscar</button>
+      {{ form.Buscar }}
+      <button type="sumit" name="btn-buscar">Buscar</button>
     </div>
-    <br>
-    {{ form.Area }}
-    <div class="">
 
-      <button type="submit" name="btn-guardar">Guardar</button>
-      <button type="submit" name="btn-editar">Editar</button>
-    </div>
-    <button type="submit" name="btn-eliminar">Eliminar</button>
     {{ form.errors }}
   </form>
 
-  <div class="">
-    {% for area in areas %}
-      <div class="">
-        {{area.CDC}}
-        {{area.Area}}
-      </div>
-    {% endfor %}
-  </div>
+  <form class="" action="." method="POST"> {% csrf_token %} 
+    {% if obj %}
+      <h1>{{obj.CDC}} {{obj.Area}}</h1>
+      <button type="submit" name="btn-eliminar" value="{{obj.CDC}}">Eliminar</button>
+      <button type="submit" name="btn-editar" value="{{obj.CDC}}">Editar</button>
+    {% endif %}
+  </form>
+
+
+  <form class="" action="." method="POST"> {% csrf_token %}
+    <div class="">
+      {% for area in areas %}
+        <div class="">
+          {{area.CDC}}
+          {{area.Area}}
+          <button type="submit" name="btn-eliminar" value="{{area.CDC}}">Eliminar</button>
+          <button type="submit" name="btn-editar" value="{{area.CDC}}">Editar</button>
+        </div>
+
+      {% endfor %}
+    </div>
+  </form>
+
 </div>

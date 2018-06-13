@@ -62,3 +62,21 @@ def value_cdc_is_already_exists(value):
         raise ValidationError('EL Centro de costo ya existe')
 
     return value
+
+def value_exists_area(value):
+    new_cdc = False
+    new_area = False
+    try:
+        from Personal.models import Areas
+        new_area = Areas.objects.filter(Area = value.lower()) or False
+    except:
+        pass
+
+    try:
+        from Personal.models import Areas
+        new_cdc = Areas.objects.filter(CDC = int(value)) or False
+    except:
+        pass
+    if new_area == False and new_cdc == False:
+        raise ValidationError('Esta area no existe')
+    return value

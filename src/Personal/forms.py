@@ -3,7 +3,8 @@ from django import forms
 from Personal.models import Puestos
 from .validators import (
     value_is_already_exists, value_exists, value_is_number,
-    value_area_is_already_exists, value_cdc_is_already_exists
+    value_area_is_already_exists, value_cdc_is_already_exists,
+    value_exists_area
     )
 
 class PuestosInputForm(forms.Form):
@@ -38,3 +39,8 @@ class AreaInputForm(forms.Form):
         if data is not data.lower():
             data = data.lower()
         return data
+
+class AreaInputFormBuscar(forms.Form):
+    Buscar = forms.CharField(
+        validators = [value_exists_area],
+        )
