@@ -1,9 +1,17 @@
 <h1>{{title}}</h1>
 
 <form class="" action="." method="POST">{% csrf_token %}
-  {{form.as_p}}
+  <div class="">
+    <div class="">
+      {{form.CDC}}
+    </div>
+    <div class="">
+      {{ form.Area}}
+    </div>
+  </div>
 
   <button type="submit" name="button">Guardar</button>
+  {{form.errors}}
 </form>
 
 {% if area %}

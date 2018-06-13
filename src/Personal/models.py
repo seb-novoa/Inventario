@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from .validators import value_is_lowercase
+from .validators import value_is_lowercase, value_is_number
 
 class Puestos(models.Model):
     Puesto = models.CharField(max_length = 30, unique = True, validators = [value_is_lowercase])
@@ -18,5 +18,10 @@ class Puestos(models.Model):
         return reverse('PuestoViewEditar', args = [self.id])
 
 class Areas(models.Model):
-    CDC     = models.IntegerField(unique = True)
+    CDC     = models.IntegerField(unique = True, validators = [value_is_number])
     Area    = models.CharField(max_length = 30, unique = True)
+
+    def __str__(self):
+        arealow = self.Area
+        area = arealow[0].upper() + arealow[1:]
+        return area

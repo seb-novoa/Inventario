@@ -103,12 +103,20 @@ class AreaView(View):
 
 class AreaViewGuardar(AreaView):
     template = 'Personal/area-guardar.html'
+
+    def correct_field(self, cdc, area):
+        cdc_field = Areas.objects.filter(CDC = cdc) or False
+        area_field = Areas.objects.filter(Area = area) or False
+        return [cdc_field, area_field]
+
     def get(self, request, *args, **kwargs):
         context = self.context_contructor('Crear Area', AreaInputForm())
         return render(request, self.template, context)
 
+
     def post(self, request, *args, **kwargs):
         form = AreaInputForm(request.POST)
+        context = self.context_contructor('Area', form)
         if form.is_valid():
             new_area = [int(form.cleaned_data.get('CDC')), form.cleaned_data.get('Area')]
             obj, created = Areas.objects.get_or_create(CDC = new_area[0], Area = new_area[1])
@@ -119,4 +127,13 @@ class AreaViewGuardar(AreaView):
             else:
                 context= self.context_contructor('Area ya existe', form)
                 context['area'] = obj
+        else:
+            cdc = request.POST.get('CDC')
+            area = request.POST.get('Area')
+            correct = self.correct_field(cdc, area)
+            if correct[0]:
+                context['area'] = Areas.objects.get(CDC = cdc)
+            elif correct[1]:
+                context['area'] = Areas.objects.get(Area = area)
+
         return render(request, self.template, context)
