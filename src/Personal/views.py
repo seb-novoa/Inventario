@@ -4,7 +4,7 @@ from django.views import View
 from Personal.models import Puestos, Areas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
-    AreaInputForm, AreaInputFormGuardar
+    AreaInputForm
 )
 
 class PuestoView(View):
@@ -57,7 +57,7 @@ class PuestoViewEditar(View):
             'title': 'Editar puesto "{p}"'.format(p = puesto),
             'form' : form
         }
-        return render(request, 'Personal/editar-puesto.html', context)
+        return render(request, 'Personal/puesto-editar.html', context)
 
     def post(self, request, puesto_id, *args, **kwargs):
         form = PuestosInputFormEditar(request.POST)
@@ -73,13 +73,13 @@ class PuestoViewEditar(View):
                 context['title']= 'El puesto no ha sido editado'
             else:
                 return redirect('/persona/puesto/')
-        return render(request, 'Personal/editar-puesto.html', context)
+        return render(request, 'Personal/puesto-editar.html', context)
 
 class AreaView(View):
-    def context_contructor(*args, **kwargs):
+    def context_contructor(self, title, form):
         context = {
-            'title' :   args[1],
-            'form'  :   args[2]
+            'title' :   title,
+            'form'  :   form
         }
         return context
 
@@ -92,11 +92,31 @@ class AreaView(View):
         context['areas'] = self.all_areas()
         return render(request, 'Personal/area.html', context)
 
+    # def post(self, request, *args, **kwargs):
+    #     context = self.context_contructor('areas', AreaInputForm())
+    #     if 'btn-guardar' in request.POST:
+    #         form = AreaInputForm(request.POST)
+    #         if form.is_valid():
+    #             print('GG<-----------------------')
+    #         context = self.context_contructor('Areas', form)
+    #     return render(request, 'Personal/area.html', context)
+
+class AreaViewGuardar(AreaView):
+    template = 'Personal/area-guardar.html'
+    def get(self, request, *args, **kwargs):
+        context = self.context_contructor('Crear Area', AreaInputForm())
+        return render(request, self.template, context)
+
     def post(self, request, *args, **kwargs):
-        context = self.context_contructor('areas', AreaInputForm())
-        if 'btn-guardar' in request.POST:
-            form = AreaInputFormGuardar(request.POST)
-            if form.is_valid():
-                print('GG<-----------------------')
-            context = self.context_contructor('Areas', form)
-        return render(request, 'Personal/area.html', context)
+        form = AreaInputForm(request.POST)
+        if form.is_valid():
+            new_area = [int(form.cleaned_data.get('CDC')), form.cleaned_data.get('Area')]
+            obj, created = Areas.objects.get_or_create(CDC = new_area[0], Area = new_area[1])
+
+            if created:
+                context= self.context_contructor('Area creada', form)
+                context['area'] = obj
+            else:
+                context= self.context_contructor('Area ya existe', form)
+                context['area'] = obj
+        return render(request, self.template, context)

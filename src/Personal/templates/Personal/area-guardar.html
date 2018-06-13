@@ -1,0 +1,15 @@
+<h1>{{title}}</h1>
+
+<form class="" action="." method="POST">{% csrf_token %}
+  {{form.as_p}}
+
+  <button type="submit" name="button">Guardar</button>
+</form>
+
+{% if area %}
+  <h1>Area</h1>
+  <div class="">
+    <h2>{{area.CDC}}  {{area.Area}}</h2>
+
+  </div>
+{% endif %}

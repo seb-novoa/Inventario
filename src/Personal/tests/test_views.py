@@ -1,5 +1,5 @@
 from django.test import TestCase
-from Personal.models import Puestos
+from Personal.models import Puestos, Areas
 
 class PuestoView(TestCase):
     def test_PuestoView_render_template(self):
@@ -22,3 +22,15 @@ class PuestoView(TestCase):
             'btn-guardar' : ['']
         })
         self.assertEqual(Puestos.objects.count(), 1)
+
+class AreaView(TestCase):
+    def test_AreaViewGuardar_render_template(self):
+        response = self.client.get('/persona/area/nueva/')
+        self.assertTemplateUsed(response, 'Personal/area-guardar.html')
+
+    def test_AreaViewGuardar_create_an_area(self):
+        response = self.client.post('/persona/area/nueva/', data ={
+            'CDC'   : 1,
+            'Area'  : 'Area1'
+        })
+        self.assertEqual(Areas.objects.count(), 1)

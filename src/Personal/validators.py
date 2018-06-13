@@ -29,6 +29,11 @@ def value_exists(value):
     return value
 
 def value_is_number(value):
-    if type(value) != int:
+    new_value = value
+    try:
+        new_value = int(value)
+    except:
+        pass
+    if type(new_value) != int:
         raise ValidationError('El centro de costo tiene que ser un número')
     return value
