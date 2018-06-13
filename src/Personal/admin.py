@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Puestos
-# Register your models here.
+from .models import Puestos, Areas
 
 admin.site.register(Puestos)
+admin.site.register(Areas)

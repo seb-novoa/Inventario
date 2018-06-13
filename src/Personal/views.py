@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from Personal.models import Puestos
+from Personal.models import Puestos, Areas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
     AreaInputForm, AreaInputFormGuardar
@@ -83,8 +83,13 @@ class AreaView(View):
         }
         return context
 
+    def all_areas(self):
+        areas = Areas.objects.all()
+        return areas
+
     def get(self, request, *args, **kwargs):
         context = self.context_contructor('Areas', AreaInputForm())
+        context['areas'] = self.all_areas()
         return render(request, 'Personal/area.html', context)
 
     def post(self, request, *args, **kwargs):
@@ -92,6 +97,6 @@ class AreaView(View):
         if 'btn-guardar' in request.POST:
             form = AreaInputFormGuardar(request.POST)
             if form.is_valid():
-                print('GG')
-            context = self.context_contructor('areasss', form)
+                print('GG<-----------------------')
+            context = self.context_contructor('Areas', form)
         return render(request, 'Personal/area.html', context)

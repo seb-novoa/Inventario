@@ -30,6 +30,5 @@ def value_exists(value):
 
 def value_is_number(value):
     if type(value) != int:
-        print('<------------------------------>hell')
         raise ValidationError('El centro de costo tiene que ser un número')
     return value

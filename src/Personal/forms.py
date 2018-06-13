@@ -19,12 +19,15 @@ class PuestosInputFormGuardar(PuestosInputForm):
 
 
 class AreaInputForm(forms.Form):
-    CDC = forms.IntegerField(
+    CDC = forms.CharField(
         validators = [value_is_number],
         widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}
         ))
     Area = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Area'}))
 
 class AreaInputFormGuardar(AreaInputForm):
-        CDC = forms.IntegerField(validators = [value_is_number],widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}))
+        CDC = forms.CharField(
+            validators = [value_is_number],
+            widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}
+            ))
         Area = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Area'}))
