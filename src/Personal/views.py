@@ -46,7 +46,7 @@ class PuestoView(View):
         if 'btn-eliminar' in request.POST:
             del_puesto = request.POST.get('btn-eliminar')
             instance = Puestos.objects.get(id = del_puesto)
-            context['title'] = 'El puesto "{p}" ha sido eliminado.'.format(p = instance)
+            messages.success(request, 'El puesto "{p}" ha sido eliminado.'.format(p = instance))
             instance.delete()
         context['puestos'] = self.all_puestos()
         return render(request, 'Personal/puesto.html', context)
@@ -72,8 +72,9 @@ class PuestoViewEditar(View):
             new_puesto = form.cleaned_data.get('Puesto')
             obj, created = Puestos.objects.update_or_create(defaults = {'Puesto' : new_puesto},  id= puesto_id)
             if created:
-                context['title']= 'El puesto no ha sido editado'
+                messages.error(request, 'El puesto no ha sido creado')
             else:
+                messages.success(request, 'El puesto se ha guardado')
                 return redirect('/persona/puesto/')
         return render(request, 'Personal/puesto-editar.html', context)
 
