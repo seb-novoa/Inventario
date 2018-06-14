@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -32,8 +33,8 @@ class PuestoView(View):
             if form.is_valid():
                 new_puesto = form.cleaned_data.get('Puesto')
                 obj, created = Puestos.objects.get_or_create(Puesto = new_puesto)
-                if created:                                                   ############
-                    context['title']= 'El puesto ha sido creado'
+                if created:
+                    messages.success(request, 'El puesto "{p}" ha sido creado'.format(p = obj.Puesto))
                 else:
                     context['obj']= obj
 
