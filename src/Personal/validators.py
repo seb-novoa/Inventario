@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+import re
 
 def value_is_lowercase(value):
     if value != value.lower():
@@ -29,15 +30,13 @@ def value_exists(value):
         raise ValidationError('Este puesto no existe')
     return value
 
-def value_is_number(value):
-    new_value = value
-    try:
-        new_value = int(value)
-    except:
-        pass
-    if type(new_value) != int:
-        raise ValidationError('El centro de costo tiene que ser un número')
-    return value
+def value_is_correct_expression_regular(value):
+    patron = re.compile('^[A-Z]{4}[0-9]{4}$')
+    if patron.match(value.upper()):
+        return value.upper()
+    else:
+        raise ValidationError('Costo no concuerda')
+    return value.upper()
 
 def value_area_is_already_exists(value):
     try:

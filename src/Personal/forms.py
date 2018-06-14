@@ -2,7 +2,7 @@ from django import forms
 
 from Personal.models import Puestos
 from .validators import (
-    value_is_already_exists, value_exists, value_is_number,
+    value_is_already_exists, value_exists, value_is_correct_expression_regular,
     value_area_is_already_exists, value_cdc_is_already_exists,
     value_exists_area
     )
@@ -26,7 +26,7 @@ class PuestosInputFormGuardar(PuestosInputForm):
 
 class AreaInputForm(forms.Form):
     CDC = forms.CharField(
-        validators = [value_is_number, value_cdc_is_already_exists],
+        validators = [value_is_correct_expression_regular, value_cdc_is_already_exists],
         widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}
         ))
     Area = forms.CharField(
