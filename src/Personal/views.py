@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views import View
 
+import re
+
 from Personal.models import Puestos, Areas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
@@ -87,11 +89,8 @@ class AreaView(View):
         return context
 
     def objecto(self, value):
-        try:
-            value = int(value)
-        except:
-            pass
-        if type(value) == int:
+        patron = re.compile('^[A-Z]{4}[0-9]{4}$')
+        if patron.match(value.upper()):
             obj = Areas.objects.get(CDC = value)
         else:
             obj = Areas.objects.get(Area = value)
@@ -172,7 +171,7 @@ class AreaViewGuardar(AreaView):
         form = AreaInputForm(request.POST)
         context = self.context_contructor('Area', form)
         if form.is_valid():
-            new_area = [int(form.cleaned_data.get('CDC')), form.cleaned_data.get('Area')]
+            new_area = [form.cleaned_data.get('CDC'), form.cleaned_data.get('Area')]
             obj, created = Areas.objects.get_or_create(CDC = new_area[0], Area = new_area[1])
 
             if created:

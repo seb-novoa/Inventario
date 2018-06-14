@@ -73,7 +73,7 @@ def value_exists_area(value):
 
     try:
         from Personal.models import Areas
-        new_cdc = Areas.objects.filter(CDC = int(value)) or False
+        new_cdc = Areas.objects.filter(CDC = value.lower()) or False
     except:
         pass
     if new_area == False and new_cdc == False:

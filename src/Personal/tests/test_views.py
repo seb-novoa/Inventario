@@ -30,7 +30,8 @@ class AreaView(TestCase):
 
     def test_AreaViewGuardar_create_an_area(self):
         response = self.client.post('/persona/area/nueva/', data ={
-            'CDC'   : 1,
-            'Area'  : 'Area1'
+            'CDC'   : 'ASDF1234',
+            'Area'  : 'Area1',
+            'btn-guardar' : ['']
         })
         self.assertEqual(Areas.objects.count(), 1)
