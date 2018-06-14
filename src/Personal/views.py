@@ -8,45 +8,46 @@ from Personal.forms import(
 )
 
 class PuestoView(View):
+    def all_puestos(self):
+        return Puestos.objects.all()
+
+    def context_contructor(self, title, form):
+        context = {
+            'title' :   title,
+            'form'  :   form
+        }
+        return context
+
     def get(self, request, *args, **kwargs):
         form = PuestosInputForm()
-        context = {
-            'title': 'Puestos',
-            'form' : form
-        }
+        context = self.context_contructor('Puestos', form)
+        context['puestos'] = self.all_puestos()
         return render(request, 'Personal/puesto.html', context)
 
     def post(self, request, *args, **kwargs):
-        form = PuestosInputForm(request.POST)
-        context = {
-            'title': 'Puestos',
-            'form' : form
-        }
+        form = PuestosInputForm()
+        context = self.context_contructor('Puestos', form)
         if 'btn-guardar' in request.POST:
             form = PuestosInputFormGuardar(request.POST)
             if form.is_valid():
                 new_puesto = form.cleaned_data.get('Puesto')
                 obj, created = Puestos.objects.get_or_create(Puesto = new_puesto)
-                if created:
+                if created:                                                   ############
                     context['title']= 'El puesto ha sido creado'
                 else:
-                    context['title']= 'El puesto "{i}" ya estaba registrado'.format(i = obj.Puesto)
+                    context['obj']= obj
 
         if 'btn-editar' in request.POST:
-            form = PuestosInputForm(request.POST)
-            if form.is_valid():
-                new_puesto = form.cleaned_data.get('Puesto')
-                instance = Puestos.objects.get(Puesto = new_puesto)
-                return redirect(instance)
+            new_puesto = request.POST.get('btn-editar')
+            instance = Puestos.objects.get(id = new_puesto)
+            return redirect(instance)
 
         if 'btn-eliminar' in request.POST:
-            form = PuestosInputForm(request.POST)
-            if form.is_valid():
-                new_puesto = form.cleaned_data.get('Puesto')
-                instance = Puestos.objects.get(Puesto = new_puesto)
-                context['title'] = 'El puesto "{p}" ha sido eliminado.'.format(p = instance)
-                instance.delete()
-
+            del_puesto = request.POST.get('btn-eliminar')
+            instance = Puestos.objects.get(id = del_puesto)
+            context['title'] = 'El puesto "{p}" ha sido eliminado.'.format(p = instance)
+            instance.delete()
+        context['puestos'] = self.all_puestos()
         return render(request, 'Personal/puesto.html', context)
 
 class PuestoViewEditar(View):

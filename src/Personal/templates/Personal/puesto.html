@@ -6,10 +6,31 @@
 
     <div class="">
 
-      <button type="submit" name="btn-guardar">Guardar</button>
-      <button type="submit" name="btn-editar">Editar</button>
+      <button type="submit" name="btn-guardar">Guardar o Buscar</button>
+
     </div>
-    <button type="submit" name="btn-eliminar">Eliminar</button>
+
     {{ form.errors }}
   </form>
+
+  {% if obj %}
+    <h2>Puesto encontrado</h2>
+    <form class="" action="." method="POST">{% csrf_token %}
+      <div class="">
+        {{ obj.Puesto }}
+        <button type="submit" name="btn-editar" value="{{ obj.id }}">Editar</button>
+        <button type="submit" name="btn-eliminar" value="{{ obj.id }}">Eliminar</button>
+      </div>
+    </form>
+  {% endif %}
+  <br>
+  {% for puesto in puestos %}
+    <form class="" action="." method="POST">{% csrf_token %}
+      <div class="">
+        {{ puesto.Puesto }}
+        <button type="submit" name="btn-editar" value="{{ puesto.id }}">Editar</button>
+        <button type="submit" name="btn-eliminar" value="{{ puesto.id }}">Eliminar</button>
+      </div>
+    </form>
+  {% endfor %}
 </div>
