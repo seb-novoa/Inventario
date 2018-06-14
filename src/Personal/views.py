@@ -118,8 +118,42 @@ class AreaView(View):
                 obj = self.objecto(form.cleaned_data.get('Buscar'))
                 context['obj'] = obj
 
+        if 'btn-editar' in request.POST:
+            new_area = request.POST.get('btn-editar')
+            instance = Areas.objects.get(id = new_area)
+            return redirect(instance)
+
+        if 'btn-eliminar' in request.POST:
+            del_area = request.POST.get('btn-eliminar')
+            instance = Areas.objects.get(id = del_area)
+            messages.success(request, 'El area "{p}" ha sido eliminado.'.format(p = instance))
+            instance.delete()
+
         context['areas'] = self.all_areas()
         return render(request, 'Personal/area.html', context)
+
+class AreaViewEditar(AreaView):
+    def get(self, request, area_id, *args, **kwargs):
+        form  = AreaInputForm
+        instance = Areas.objects.get(id = area_id)
+        context = self.context_contructor('Editar área {i}'.format(i = instance.Area), form)
+        return render(request, 'Personal/area-guardar.html', context)
+
+    def post(self, request, area_id, *args, **kwargs):
+        form = AreaInputForm(request.POST)
+        area = Areas.objects.get(id  = area_id)
+        context = self.context_contructor('Editar área {i}'.format(i = area), form)
+
+        if form.is_valid():
+            new_area = form.cleaned_data.get('Area')
+            new_cdc = form.cleaned_data.get('CDC')
+            obj, created = Areas.objects.update_or_create(defaults = {'Area' : new_area, 'CDC': new_cdc},  id= area_id)
+            if created:
+                messages.error(request, 'El area no ha sido creado')
+            else:
+                messages.success(request, 'El area se ha guardado')
+                return redirect('/persona/area/')
+        return render(request, 'Personal/area-guardar.html', context)
 
 class AreaViewGuardar(AreaView):
     template = 'Personal/area-guardar.html'
@@ -142,10 +176,11 @@ class AreaViewGuardar(AreaView):
             obj, created = Areas.objects.get_or_create(CDC = new_area[0], Area = new_area[1])
 
             if created:
-                context= self.context_contructor('Area creada', form)
+                context= self.context_contructor('Area', form)
+                messages.success(request, 'El área ha sido creada')
                 context['area'] = obj
             else:
-                context= self.context_contructor('Area ya existe', form)
+                context= self.context_contructor('Area', form)
                 context['area'] = obj
         else:
             cdc = request.POST.get('CDC')

@@ -4,16 +4,25 @@
     <div class="">
       {{ form.Buscar }}
       <button type="sumit" name="btn-buscar">Buscar</button>
+      <a href="./nueva/">Crear area</a>
     </div>
 
     {{ form.errors }}
   </form>
 
-  <form class="" action="." method="POST"> {% csrf_token %} 
+  {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form class="" action="." method="POST"> {% csrf_token %}
     {% if obj %}
       <h1>{{obj.CDC}} {{obj.Area}}</h1>
-      <button type="submit" name="btn-eliminar" value="{{obj.CDC}}">Eliminar</button>
-      <button type="submit" name="btn-editar" value="{{obj.CDC}}">Editar</button>
+      <button type="submit" name="btn-editar" value="{{obj.id}}">Editar</button>
+      <button type="submit" name="btn-eliminar" value="{{obj.id}}">Eliminar</button>
     {% endif %}
   </form>
 
@@ -24,8 +33,8 @@
         <div class="">
           {{area.CDC}}
           {{area.Area}}
-          <button type="submit" name="btn-eliminar" value="{{area.CDC}}">Eliminar</button>
-          <button type="submit" name="btn-editar" value="{{area.CDC}}">Editar</button>
+          <button type="submit" name="btn-editar" value="{{area.id}}">Editar</button>
+          <button type="submit" name="btn-eliminar" value="{{area.id}}">Eliminar</button>
         </div>
 
       {% endfor %}

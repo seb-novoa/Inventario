@@ -25,3 +25,6 @@ class Areas(models.Model):
         arealow = self.Area
         area = arealow[0].upper() + arealow[1:]
         return area
+
+    def get_absolute_url(self):
+        return reverse('AreaViewEditar', args = [self.id])
