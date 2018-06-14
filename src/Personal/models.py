@@ -21,6 +21,11 @@ class Areas(models.Model):
     CDC     = models.CharField(max_length = 8, unique = True, validators = [value_is_correct_expression_regular])
     Area    = models.CharField(max_length = 30, unique = True)
 
+    def save(self, *args, **kwargs):
+        self.CDC = self.CDC.upper()
+        super(Areas, self).save(*args, **kwargs)
+
+
     def __str__(self):
         arealow = self.Area
         area = arealow[0].upper() + arealow[1:]
