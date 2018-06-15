@@ -9,5 +9,5 @@ class PuestoModels(TestCase):
 
 class AreaModels(TestCase):
     def test_model_area_CAN_save(self):
-        Areas.objects.create(CDC = 1, Area = 'Area1')
+        Areas.objects.create(CDC = 'asdf1234', Area = 'Area1')
         self.assertEqual(Areas.objects.count(), 1)
