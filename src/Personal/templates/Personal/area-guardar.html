@@ -1,33 +1,36 @@
-<h1>{{title}}</h1>
+{% extends 'Personal/base.html' %}
+{% block content %}
+  <h1>{{title}}</h1>
 
-<form class="" action="." method="POST">{% csrf_token %}
-  <div class="">
+  <form class="" action="." method="POST">{% csrf_token %}
     <div class="">
-      {{form.CDC}}
+      <div class="">
+        {{form.CDC}}
+      </div>
+      <div class="">
+        {{ form.Area}}
+      </div>
     </div>
-    <div class="">
-      {{ form.Area}}
-    </div>
-  </div>
 
-  <button type="submit" name="button">Guardar</button>
-  <form>
-  <input type="button" value="Volver atras" onclick="history.go(-1)">
+    <button type="submit" name="button">Guardar</button>
+    <form>
+    <input type="button" value="Volver atras" onclick="history.go(-1)">
+    </form>
+    {{form.errors}}
   </form>
-  {{form.errors}}
-</form>
-{% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-{% endif %}
+  {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+  {% endif %}
 
-{% if area %}
-  <h1>Area encontrada</h1>
-  <div class="">
-    <h2>{{area.CDC}}  {{area.Area}}</h2>
+  {% if area %}
+    <h1>Area encontrada</h1>
+    <div class="">
+      <h2>{{area.CDC}}  {{area.Area}}</h2>
 
-  </div>
-{% endif %}
+    </div>
+  {% endif %}
+{% endblock %}

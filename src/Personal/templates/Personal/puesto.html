@@ -1,44 +1,47 @@
-<div class="">
-  <h1>{{ title }}</h1>
-  <form class="" action="." method="POST">{% csrf_token %}
-
-    {{ form.Puesto }}
-
-    <div class="">
-
-      <button type="submit" name="btn-guardar">Guardar o Buscar</button>
-
-    </div>
-
-    {{ form.errors }}
-  </form>
-
-  {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-  {% if obj %}
-    <h2>Puesto encontrado</h2>
+{% extends 'Personal/base.html' %}
+{% block content %}
+  <div class="">
+    <h1>{{ title }}</h1>
     <form class="" action="." method="POST">{% csrf_token %}
+
+      {{ form.Puesto }}
+
       <div class="">
-        {{ obj.Puesto }}
-        <button type="submit" name="btn-editar" value="{{ obj.id }}">Editar</button>
-        <button type="submit" name="btn-eliminar" value="{{ obj.id }}">Eliminar</button>
+
+        <button type="submit" name="btn-guardar">Guardar o Buscar</button>
+
       </div>
+
+      {{ form.errors }}
     </form>
+
+    {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
   {% endif %}
-  <br>
-  {% for puesto in puestos %}
-    <form class="" action="." method="POST">{% csrf_token %}
-      <div class="">
-        {{ puesto.Puesto }}
-        <button type="submit" name="btn-editar" value="{{ puesto.id }}">Editar</button>
-        <button type="submit" name="btn-eliminar" value="{{ puesto.id }}">Eliminar</button>
-      </div>
-    </form>
-  {% endfor %}
-</div>
+
+    {% if obj %}
+      <h2>Puesto encontrado</h2>
+      <form class="" action="." method="POST">{% csrf_token %}
+        <div class="">
+          {{ obj.Puesto }}
+          <button type="submit" name="btn-editar" value="{{ obj.id }}">Editar</button>
+          <button type="submit" name="btn-eliminar" value="{{ obj.id }}">Eliminar</button>
+        </div>
+      </form>
+    {% endif %}
+    <br>
+    {% for puesto in puestos %}
+      <form class="" action="." method="POST">{% csrf_token %}
+        <div class="">
+          {{ puesto.Puesto }}
+          <button type="submit" name="btn-editar" value="{{ puesto.id }}">Editar</button>
+          <button type="submit" name="btn-eliminar" value="{{ puesto.id }}">Eliminar</button>
+        </div>
+      </form>
+    {% endfor %}
+  </div>
+{% endblock %}
