@@ -1,0 +1,20 @@
+<h1>{{title}}</h1>
+
+<form class="" action="." method="POST">{% csrf_token %}
+  <div class="">
+    {{form.as_p}}
+  </div>
+
+  <button type="submit" name="button">Guardar</button>
+  <form>
+  <input type="button" value="Volver atras" onclick="history.go(-1)">
+  </form>
+  {{form.errors}}
+</form>
+{% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+{% endif %}

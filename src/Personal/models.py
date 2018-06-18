@@ -33,3 +33,35 @@ class Areas(models.Model):
 
     def get_absolute_url(self):
         return reverse('AreaViewEditar', args = [self.id])
+
+class Personas(models.Model):
+    Nombre  =   models.CharField(max_length = 50, )
+    NombreSecundario = models.CharField(max_length = 30, null = True)
+    Apellido    =   models.CharField(max_length = 30, null = True)
+    ApellidoMaterno =   models.CharField(max_length = 30, null = True)
+
+    Area = models.ForeignKey(Areas, on_delete = models.CASCADE)
+    Puesto = models.ForeignKey(Puestos, on_delete = models.CASCADE)
+
+    Gestor  =   models.ForeignKey('self', null = True)
+
+
+    def split_Nombre(self, nombre):
+        nombre = nombre.split()
+        if len(nombre) == 3:
+            self.Nombre = nombre[0]
+            self.Apellido = nombre[1]
+            self.ApellidoMaterno = nombre[2]
+
+        elif len(nombre) > 3:
+            self.Nombre = nombre[0]
+            self.NombreSecundario = nombre[1]
+            self.Apellido = nombre[2]
+            self.ApellidoMaterno = ''.join(nombre[3:])
+
+    def save(self, *args, **kwargs):
+        self.split_Nombre(self.Nombre)
+        super(Personas, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return '{0} del area {1}'.format(self.Nombre, self.Area)

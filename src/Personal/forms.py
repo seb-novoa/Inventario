@@ -1,6 +1,6 @@
 from django import forms
 
-from Personal.models import Puestos
+from Personal.models import Puestos, Areas
 from .validators import (
     value_is_already_exists, value_exists, value_is_correct_expression_regular,
     value_area_is_already_exists, value_cdc_is_already_exists,
@@ -44,3 +44,8 @@ class AreaInputFormBuscar(forms.Form):
     Buscar = forms.CharField(
         validators = [value_exists_area],
         )
+
+class PersonaInputForm(forms.Form):
+    Nombre = forms.CharField()
+    Area = forms.ModelChoiceField(queryset = Areas.objects.all())
+    Puesto = forms.ModelChoiceField(queryset = Puestos.objects.all())

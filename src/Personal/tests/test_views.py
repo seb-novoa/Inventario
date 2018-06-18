@@ -1,5 +1,5 @@
 from django.test import TestCase
-from Personal.models import Puestos, Areas
+from Personal.models import Puestos, Areas, Personas
 
 class PuestoView(TestCase):
     def save_puesto(self, puesto):
@@ -109,3 +109,48 @@ class AreaView(TestCase):
             'btn-eliminar' : ['1']
         })
         self.assertEqual(Areas.objects.count(), 0)
+
+    def test_AreaView_save_in_upper_the_cdc_and_lower_the_area(self):
+        area1 = self.save_area('asdf1234', 'Area1')
+        area = Areas.objects.first()
+
+        self.assertEqual(area.CDC, 'ASDF1234')
+        self.assertEqual(area.Area, 'area1')
+
+class PersonaViewGuardarTestCase(TestCase):
+    def test_PersonaViewGuardar_render_template(self):
+        response = self.client.get('/persona/nueva/')
+        self.assertTemplateUsed(response, 'Personal/persona-guardar.html')
+
+    def test_PersonaViewGuardar_save_3_names(self):
+        area1 =Areas.objects.create(CDC ='asdf1234', Area ='area1')
+        puesto1 = Puestos.objects.create(Puesto = 'puesto1')
+
+        response = self.client.post('/persona/nueva/', data = {
+            'Nombre'    : 'nombre apellido apellido2',
+            'Area'      :   area1.id,
+            'Puesto'    :   puesto1.id
+        })
+        self.assertEqual(Personas.objects.count(), 1)
+
+        persona = Personas.objects.first()
+        self.assertEqual(persona.Nombre, 'nombre')
+        self.assertEqual(persona.Apellido, 'apellido')
+        self.assertEqual(persona.ApellidoMaterno, 'apellido2')
+
+    def test_PersonaViewGuardar_save_more_of_3_names(self):
+        area1 =Areas.objects.create(CDC ='asdf1234', Area ='area1')
+        puesto1 = Puestos.objects.create(Puesto = 'puesto1')
+
+        response = self.client.post('/persona/nueva/', data = {
+            'Nombre'    : 'nombre nombreSecundario apellido apellido2',
+            'Area'      :   area1.id,
+            'Puesto'    :   puesto1.id
+        })
+        self.assertEqual(Personas.objects.count(), 1)
+
+        persona = Personas.objects.first()
+        self.assertEqual(persona.Nombre, 'nombre')
+        self.assertEqual(persona.NombreSecundario, 'nombreSecundario')
+        self.assertEqual(persona.Apellido, 'apellido')
+        self.assertEqual(persona.ApellidoMaterno, 'apellido2')

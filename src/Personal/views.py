@@ -4,10 +4,11 @@ from django.views import View
 
 import re
 
-from Personal.models import Puestos, Areas
+from Personal.models import Puestos, Areas, Personas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
-    AreaInputForm, AreaInputFormBuscar
+    AreaInputForm, AreaInputFormBuscar,
+    PersonaInputForm,
 )
 
 class PuestoView(View):
@@ -191,3 +192,26 @@ class AreaViewGuardar(AreaView):
                 context['area'] = Areas.objects.get(Area = area)
 
         return render(request, self.template, context)
+
+class PersonaViewGuardar(View):
+    def context_contructor(self, title, form):
+        context = {
+            'title' :   title,
+            'form'  :   form
+        }
+        return context
+    def get(self, request, *args, **kwargs):
+        context = self.context_contructor('Ingresar Persona', PersonaInputForm())
+        return render(request, 'Personal/persona-guardar.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = PersonaInputForm(request.POST)
+        if form.is_valid():
+            obj, created = Personas.objects.get_or_create(form.cleaned_data)
+
+            if created:
+                messages.success(request, 'La persona ha sido registrada')
+            else:
+                messages.error(request, 'La persona no ha sido registrada')
+        context = self.context_contructor('Ingresar Persona', form)
+        return render(request, 'Personal/persona-guardar.html', context)
