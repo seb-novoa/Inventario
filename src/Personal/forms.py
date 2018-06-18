@@ -1,6 +1,6 @@
 from django import forms
 
-from Personal.models import Puestos, Areas
+from Personal.models import Puestos, Areas, Personas
 from .validators import (
     value_is_already_exists, value_exists, value_is_correct_expression_regular,
     value_area_is_already_exists, value_cdc_is_already_exists,
@@ -49,3 +49,22 @@ class PersonaInputForm(forms.Form):
     Nombre = forms.CharField()
     Area = forms.ModelChoiceField(queryset = Areas.objects.all())
     Puesto = forms.ModelChoiceField(queryset = Puestos.objects.all())
+
+    def clean_Nombre(self):
+        nombre = self.cleaned_data['Nombre'].split()
+        if len(nombre) < 3:
+            raise forms.ValidationError('falta un nombre o apellido.')
+
+        return self.cleaned_data['Nombre']
+
+    def clean(self):
+        nombre = self.cleaned_data['Nombre'].split()
+        if len(nombre) == 3:
+            persona = Personas.objects.filter(Nombre = nombre[0], Apellido = nombre[1], ApellidoMaterno = nombre[2], Area = self.cleaned_data['Area'])
+            if persona:
+                raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
+        if len(nombre) > 3:
+            persona = Personas.objects.filter(Nombre = nombre[0], NombreSecundario = nombre[1], Apellido = nombre[2], ApellidoMaterno = ''.join(nombre[3:]), Area = self.cleaned_data['Area'])
+            if persona:
+                raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
+        return self.cleaned_data

@@ -207,11 +207,13 @@ class PersonaViewGuardar(View):
     def post(self, request, *args, **kwargs):
         form = PersonaInputForm(request.POST)
         if form.is_valid():
-            obj, created = Personas.objects.get_or_create(form.cleaned_data)
+            nombre = form.cleaned_data['Nombre']
+            area = form.cleaned_data['Area']
+            puesto = form.cleaned_data['Puesto']
+            created = Personas.objects.create(Nombre = nombre, Area = area, Puesto = puesto)
+            messages.success(request, 'La persona ha sido registrada')
+            # print(created.Nombre)
 
-            if created:
-                messages.success(request, 'La persona ha sido registrada')
-            else:
-                messages.error(request, 'La persona no ha sido registrada')
+
         context = self.context_contructor('Ingresar Persona', form)
         return render(request, 'Personal/persona-guardar.html', context)

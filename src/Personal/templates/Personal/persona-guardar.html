@@ -12,7 +12,9 @@
     <form>
     <input type="button" value="Volver atras" onclick="history.go(-1)">
     </form>
-    {{form.errors}}
+    {% for field, error in form.errors.items %}
+      {{error}}
+    {% endfor%}
   </form>
   {% if messages %}
     <ul class="messages">

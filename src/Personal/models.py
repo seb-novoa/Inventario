@@ -35,10 +35,10 @@ class Areas(models.Model):
         return reverse('AreaViewEditar', args = [self.id])
 
 class Personas(models.Model):
-    Nombre  =   models.CharField(max_length = 50, )
-    NombreSecundario = models.CharField(max_length = 30, null = True)
-    Apellido    =   models.CharField(max_length = 30, null = True)
-    ApellidoMaterno =   models.CharField(max_length = 30, null = True)
+    Nombre  =   models.CharField(max_length = 50, unique = False)
+    NombreSecundario = models.CharField(max_length = 30, null = True, unique = False)
+    Apellido    =   models.CharField(max_length = 30, null = True, unique = False)
+    ApellidoMaterno =   models.CharField(max_length = 30, null = True, unique = False)
 
     Area = models.ForeignKey(Areas, on_delete = models.CASCADE)
     Puesto = models.ForeignKey(Puestos, on_delete = models.CASCADE)
@@ -46,8 +46,8 @@ class Personas(models.Model):
     Gestor  =   models.ForeignKey('self', null = True)
 
 
-    def split_Nombre(self, nombre):
-        nombre = nombre.split()
+    def split_Nombre(self, nom):
+        nombre = nom.split()
         if len(nombre) == 3:
             self.Nombre = nombre[0]
             self.Apellido = nombre[1]
@@ -64,4 +64,4 @@ class Personas(models.Model):
         super(Personas, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '{0} del area {1}'.format(self.Nombre, self.Area)
+        return '{0} {1} del area {2}'.format(self.Nombre, self.Apellido, self.Area)
