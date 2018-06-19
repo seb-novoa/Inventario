@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 import re
@@ -212,8 +212,66 @@ class PersonaViewGuardar(View):
             puesto = form.cleaned_data['Puesto']
             created = Personas.objects.create(Nombre = nombre, Area = area, Puesto = puesto)
             messages.success(request, 'La persona ha sido registrada')
-            # print(created.Nombre)
 
+            if form.cleaned_data['GestorOpcion'] == 'Gestor':
+                created.gestor()
+                return redirect(created)
+
+            elif form.cleaned_data['GestorOpcion'] == 'AsignarGestor':
+                return redirect(created)
 
         context = self.context_contructor('Ingresar Persona', form)
         return render(request, 'Personal/persona-guardar.html', context)
+
+class PersonaViewGestor(PersonaViewGuardar):
+    def template(self, persona):
+        if persona.Gestor:
+            template= 'Personal/persona-gestor.html'
+        else:
+            template = 'Personal/persona-gestionada.html'
+        return template
+
+    def get(self, request, persona_id):
+        obj = get_object_or_404(Personas, id = persona_id)
+        if obj.Gestor:
+            personas = obj.Area.personas_set.all()
+            context = {
+                'personas':personas,
+                'persona_id':int(persona_id),
+            }
+
+            template = self.template(obj)
+
+        else:
+            personas = obj.Area.personas_set.filter(Gestor = True)
+            context = {
+                'personas':personas,
+                'persona_id':int(persona_id),
+            }
+
+            template = self.template(obj)
+        return render(request, template, context)
+
+    def post(self, request, persona_id):
+        obj = get_object_or_404(Personas, id = persona_id)
+        if obj.Gestor:
+            personas = obj.Area.personas_set.all()
+            context = {
+                'personas':personas,
+                'persona_id':int(persona_id),
+            }
+            ids = request.POST.getlist('choices')
+            personas = Personas.objects.filter(id__in = ids).update(GestorIdentificador = obj)
+
+        else:
+            personas = obj.Area.personas_set.filter(Gestor = True)
+            context = {
+                'personas':personas,
+                'persona_id':int(persona_id),
+            }
+            id = request.POST['choice']
+            gestor = get_object_or_404(Personas, id = id)
+            obj.GestorIdentificador = gestor
+            obj.save()
+        template = self.template(obj)
+        return render(request, template, context)

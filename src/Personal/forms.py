@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.models import ModelForm
 
 from Personal.models import Puestos, Areas, Personas
 from .validators import (
@@ -46,19 +47,29 @@ class AreaInputFormBuscar(forms.Form):
         )
 
 class PersonaInputForm(forms.Form):
+
+    CHOICES_FIELD   =   [
+        ('Gestor', 'Gestor'),
+        ('AsignarGestor', 'Asignar gestor'),
+        ('SinGestor', 'Sin gestor')
+    ]
+
     Nombre = forms.CharField()
     Area = forms.ModelChoiceField(queryset = Areas.objects.all())
     Puesto = forms.ModelChoiceField(queryset = Puestos.objects.all())
+    GestorOpcion = forms.ChoiceField(choices = CHOICES_FIELD, widget = forms.RadioSelect())
 
-    def clean_Nombre(self):
-        nombre = self.cleaned_data['Nombre'].split()
-        if len(nombre) < 3:
-            raise forms.ValidationError('falta un nombre o apellido.')
-
-        return self.cleaned_data['Nombre']
+    # def clean_Nombre(self):
+    #     nombre = self.cleaned_data['Nombre'].split()
+    #     if len(nombre) < 3:
+    #         raise forms.ValidationError('falta un nombre o apellido.')
+    #
+    #     return self.cleaned_data['Nombre']
 
     def clean(self):
         nombre = self.cleaned_data['Nombre'].split()
+        if len(nombre) < 3:
+            raise forms.ValidationError('falta un nombre o apellido.')
         if len(nombre) == 3:
             persona = Personas.objects.filter(Nombre = nombre[0], Apellido = nombre[1], ApellidoMaterno = nombre[2], Area = self.cleaned_data['Area'])
             if persona:

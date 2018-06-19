@@ -43,7 +43,8 @@ class Personas(models.Model):
     Area = models.ForeignKey(Areas, on_delete = models.CASCADE)
     Puesto = models.ForeignKey(Puestos, on_delete = models.CASCADE)
 
-    Gestor  =   models.ForeignKey('self', null = True)
+    Gestor = models.BooleanField(default = False)
+    GestorIdentificador  =   models.ForeignKey('self', null = True)
 
 
     def split_Nombre(self, nom):
@@ -63,5 +64,12 @@ class Personas(models.Model):
         self.split_Nombre(self.Nombre)
         super(Personas, self).save(*args, **kwargs)
 
+    def gestor(self):
+        self.Gestor = True
+        self.save()
+
     def __str__(self):
         return '{0} {1} del area {2}'.format(self.Nombre, self.Apellido, self.Area)
+
+    def get_absolute_url(self):
+        return reverse('PersonaViewGestor', args = [self.id])
