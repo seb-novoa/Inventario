@@ -1,5 +1,4 @@
 
-<!-- holas -->
 <form class="" action="." method="POST">{% csrf_token %}
     {% for persona in personas %}
       {% if persona.id !=  persona_id%}
@@ -8,7 +7,7 @@
           <input type="radio" id="{{persona.id}}" name="choice" value="{{persona.id}}" >
           <label for="{{persona.id}}">{{persona.Nombre}} {{persona.Apellido}}</label>
         </div>
-        
+
       {% endif %}
     {% endfor %}
     <br>

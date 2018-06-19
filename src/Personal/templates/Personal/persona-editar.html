@@ -1,0 +1,19 @@
+<form class="" action="." method="POST">{% csrf_token %}
+  {% for persona in personas%}
+    <div class="">
+      {{persona}}
+      <button type="submit" name="btn-editar" value="{{persona.id}}">Editar</button>
+      <button type="button" name="btn-gestionar" value="{{persona.id}}">Gestionar</button>
+      <button type="submit" name="btn-eliminar" value="{{persona.id}}">Eliminar</button>
+    </div>
+  {% endfor %}
+
+  {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+  
+</form>

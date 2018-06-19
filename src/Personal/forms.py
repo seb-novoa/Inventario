@@ -79,3 +79,8 @@ class PersonaInputForm(forms.Form):
             if persona:
                 raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
         return self.cleaned_data
+
+class PersonaEditarForm(forms.models.ModelForm):
+    class Meta:
+        model= Personas
+        fields = ('Nombre', 'Area', 'Puesto',)

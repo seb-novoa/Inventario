@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.urls import reverse_lazy
 
 import re
 
@@ -8,7 +9,7 @@ from Personal.models import Puestos, Areas, Personas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
     AreaInputForm, AreaInputFormBuscar,
-    PersonaInputForm,
+    PersonaInputForm, PersonaEditarForm
 )
 
 class PuestoView(View):
@@ -193,15 +194,20 @@ class AreaViewGuardar(AreaView):
 
         return render(request, self.template, context)
 
-class PersonaViewGuardar(View):
+class PersonaView(View):
     def context_contructor(self, title, form):
         context = {
             'title' :   title,
             'form'  :   form
         }
         return context
+
+    def all(self):
+        return Personas.objects.all().order_by('Area')
+
+class PersonaViewGuardar(PersonaView):
     def get(self, request, *args, **kwargs):
-        context = self.context_contructor('Ingresar Persona', PersonaInputForm())
+        context = self.context_contructor('Ingresar Persona', PersonaInputForm(initial = {'GestorOpcion': 'SinGestor'}))
         return render(request, 'Personal/persona-guardar.html', context)
 
     def post(self, request, *args, **kwargs):
@@ -223,7 +229,50 @@ class PersonaViewGuardar(View):
         context = self.context_contructor('Ingresar Persona', form)
         return render(request, 'Personal/persona-guardar.html', context)
 
-class PersonaViewGestor(PersonaViewGuardar):
+class PersonaViewEditar(PersonaView):
+    def get(self, request):
+        return render(request, 'Personal/persona-editar.html', {'personas' : self.all()})
+
+    def post(self, request):
+        if 'btn-editar' in request.POST:
+            persona = get_object_or_404(Personas, id = request.POST['btn-editar'])
+            return redirect('PersonaViewEditarGuardar', persona.id)
+        if 'btn-eliminar' in request.POST:
+            persona = get_object_or_404(Personas, id = request.POST['btn-eliminar'])
+            return redirect('PersonaViewEditarDelete', persona.id)
+        return render(request, 'Personal/persona-editar.html', {'personas' : self.all()})
+
+from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic.edit import UpdateView
+class PersonaViewEditarGuardar(SuccessMessageMixin, UpdateView):
+    model = Personas
+    fields = ['Nombre', 'Area', 'Puesto']
+    template_name = 'Personal/persona-guardar.html'
+    success_url = reverse_lazy('PersonaViewEditar')
+    success_message = 'Persona modificada'
+
+
+from django.views.generic.edit import DeleteView
+class PersonaViewEditarDelete(SuccessMessageMixin, DeleteView):
+    model = Personas
+    success_url = reverse_lazy('PersonaViewEditar')
+    success_message = 'Persona eliminada'
+
+    def get(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return self.post(request, *args, **kwargs)
+
+
+
+# class PersonaViewEditarGuardar(PersonaView):
+#     def get(self, request, persona_id, *args, **kwargs):
+#         persona = Personas.objects.filter(id = persona_id)
+#         form  = PersonaEditarForm(persona)
+#         context = self.context_contructor('Editar personal', form)
+#         return render(request, 'Personal/persona-guardar.html', context)
+
+
+class PersonaViewGestor(PersonaView):
     def template(self, persona):
         if persona.Gestor:
             template= 'Personal/persona-gestor.html'
