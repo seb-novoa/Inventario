@@ -240,6 +240,9 @@ class PersonaViewEditar(PersonaView):
         if 'btn-eliminar' in request.POST:
             persona = get_object_or_404(Personas, id = request.POST['btn-eliminar'])
             return redirect('PersonaViewEditarDelete', persona.id)
+        if 'btn-gestionar' in request.POST:
+            persona = get_object_or_404(Personas, id = request.POST['btn-gestionar'])
+            return redirect('PersonaViewEditarGestor', persona.id)
         return render(request, 'Personal/persona-editar.html', {'personas' : self.all()})
 
 from django.contrib.messages.views import SuccessMessageMixin
@@ -250,7 +253,6 @@ class PersonaViewEditarGuardar(SuccessMessageMixin, UpdateView):
     template_name = 'Personal/persona-guardar.html'
     success_url = reverse_lazy('PersonaViewEditar')
     success_message = 'Persona modificada'
-
 
 from django.views.generic.edit import DeleteView
 class PersonaViewEditarDelete(SuccessMessageMixin, DeleteView):
@@ -301,6 +303,7 @@ class PersonaViewGestor(PersonaView):
             context = {
                 'personas':personas,
                 'persona_id':int(persona_id),
+                'obj' : obj,
             }
 
             template = self.template(obj)
@@ -338,3 +341,41 @@ class PersonaViewGestor(PersonaView):
             obj.save()
         template = self.template(obj)
         return render(request, template, context)
+
+class PersonaViewEditarGestor(PersonaViewGestor):
+        def post(self, request, persona_id):
+            obj = get_object_or_404(Personas, id = persona_id)
+            if obj.Gestor:
+                personas = obj.Area.personas_set.all().order_by('-GestorIdentificador')
+                context = {
+                    'personas':personas,
+                    'persona_id':int(persona_id),
+                    'obj' : obj,
+                }
+                ids = request.POST.getlist('choices')
+                ids = list(map(int, ids))
+                personas_ids = obj.personas_set.all().values('id')
+
+                for i in ids:
+                    if i not in [personas_ids[k]['id'] for k in range(0 , len(personas_ids))]:
+                         Personas.objects.filter(id = i).update(GestorIdentificador = obj)
+
+                for i in [personas_ids[k]['id'] for k in range(0 , len(personas_ids))]:
+                    if i not in ids:
+                        Personas.objects.filter(id = i).update(GestorIdentificador = '')
+
+                # personas = Personas.objects.filter(id__in = ids).update(GestorIdentificador = obj)
+
+            else:
+                personas = obj.Area.personas_set.filter(Gestor = True)
+                context = {
+                    'personas':personas,
+                    'persona_id':int(persona_id),
+                }
+                id = request.POST['choice']
+                gestor = get_object_or_404(Personas, id = id)
+                obj.GestorIdentificador = gestor
+                obj.save()
+            messages.success(request, 'Gestor modificado')
+            template = self.template(obj)
+            return render(request, template, context)

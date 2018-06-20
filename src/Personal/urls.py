@@ -4,7 +4,7 @@ from Personal.views import (
     PuestoView, PuestoViewEditar,
     AreaView, AreaViewGuardar, AreaViewEditar,
     PersonaViewGuardar, PersonaViewGestor, PersonaViewEditar,
-    PersonaViewEditarGuardar, PersonaViewEditarDelete,
+    PersonaViewEditarGuardar, PersonaViewEditarDelete, PersonaViewEditarGestor,
     )
 urlpatterns = [
     # Personal
@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^gestor/(?P<persona_id>[0-9]+)/$', PersonaViewGestor.as_view(), name = 'PersonaViewGestor'),
     url(r'^editar/$', PersonaViewEditar.as_view(), name = 'PersonaViewEditar'),
     url(r'^editar/(?P<pk>[0-9]+)/$', PersonaViewEditarGuardar.as_view(), name = 'PersonaViewEditarGuardar'),
+    url(r'^editar/(?P<persona_id>[0-9]+)/gestor/$', PersonaViewEditarGestor.as_view(), name = 'PersonaViewEditarGestor'),
     url(r'^editar/(?P<pk>[0-9]+)/delete/$', PersonaViewEditarDelete.as_view(), name = 'PersonaViewEditarDelete'),
     # Areas
     url(r'^area/$', AreaView.as_view(), name = 'AreaView'),

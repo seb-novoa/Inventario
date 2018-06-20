@@ -1,12 +1,16 @@
 <form class="" action="." method="POST">{% csrf_token %}
+
     {% for persona in personas %}
       {% if persona.id !=  persona_id%}
 
-        <input type="checkbox" id="{{persona.id}}" name="choices" value="{{persona.id}}" >
-        <label for="{{persona.id}}">{{persona.Nombre}} {{persona.Apellido}}</label>
-
+        <div class="">
+          <input type="checkbox" id="{{persona.id}}" name="choices" value="{{persona.id}}" {% if persona in obj.personas_set.all%} checked {% endif %}>
+          <label for="{{persona.id}}">{{persona.Nombre}} {{persona.Apellido}}</label>
+        </div>
+      
       {% endif %}
     {% endfor %}
+
     <br>
     <button type="submit" name="button">Guardar</button>
 </form>
