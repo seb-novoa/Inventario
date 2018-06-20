@@ -9,7 +9,7 @@ from Personal.models import Puestos, Areas, Personas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
     AreaInputForm, AreaInputFormBuscar,
-    PersonaInputForm, PersonaEditarForm
+    PersonaInputForm, PersonaEditarForm,
 )
 
 class PuestoView(View):
@@ -246,7 +246,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import UpdateView
 class PersonaViewEditarGuardar(SuccessMessageMixin, UpdateView):
     model = Personas
-    fields = ['Nombre', 'Area', 'Puesto']
+    form_class = PersonaEditarForm
     template_name = 'Personal/persona-guardar.html'
     success_url = reverse_lazy('PersonaViewEditar')
     success_message = 'Persona modificada'
@@ -257,10 +257,24 @@ class PersonaViewEditarDelete(SuccessMessageMixin, DeleteView):
     model = Personas
     success_url = reverse_lazy('PersonaViewEditar')
     success_message = 'Persona eliminada'
+    template_name = 'Personal/persona_confirm_delete.html'
 
-    def get(self, request, *args, **kwargs):
+
+
+    def get(self, request, pk, *args, **kwargs):
+        persona = get_object_or_404(Personas, id = pk)
+        gestionados = persona.personas_set.all()
+        context = {
+            'title' : 'ESTE TITULO',
+            'persona' : persona,
+            'gestionados' : gestionados,
+            }
+        return render(request, self.template_name, context)
+
+    def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
-        return self.post(request, *args, **kwargs)
+        return super(PersonaViewEditarDelete, self).delete(request, *args, **kwargs)
+
 
 
 

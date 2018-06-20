@@ -1,0 +1,13 @@
+<h1>{{title}}</h1>
+
+<form method="post">{% csrf_token %}
+    <p>¿Estas seguro de eliminar "{{ persona }}"?</p>
+    <input type="submit" value="Confirm" />
+</form>
+
+{% if gestionados%}
+  <strong>Las siguientes personas serán borradas si no se cambian de gestor.</strong>
+  {% for persona in gestionados %}
+    <p>{{persona}}</p>
+  {% endfor %}
+{% endif %}

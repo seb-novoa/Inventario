@@ -80,7 +80,21 @@ class PersonaInputForm(forms.Form):
                 raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
         return self.cleaned_data
 
+
 class PersonaEditarForm(forms.models.ModelForm):
     class Meta:
         model= Personas
         fields = ('Nombre', 'Area', 'Puesto',)
+
+    def clean(self):
+        nombre = self.cleaned_data['Nombre'].split()
+        if len(nombre) < 3:
+            raise forms.ValidationError('falta un nombre o apellido.')
+        if len(nombre) == 3:
+            persona = Personas.objects.filter(Nombre = nombre[0], Apellido = nombre[1], ApellidoMaterno = nombre[2], Area = self.cleaned_data['Area'])
+            if persona:
+                raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
+        if len(nombre) > 3:
+            persona = Personas.objects.filter(Nombre = nombre[0], NombreSecundario = nombre[1], Apellido = nombre[2], ApellidoMaterno = ''.join(nombre[3:]), Area = self.cleaned_data['Area'])
+            if persona:
+                raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
