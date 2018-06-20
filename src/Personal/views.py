@@ -260,6 +260,13 @@ class PersonaView(View):
                 context['obtenido'] = obtenido
         return render(request, 'Personal/persona.html', context)
 
+class PersonaViewDetail(PersonaView):
+    def get(self, request, persona_id):
+        persona = get_object_or_404(Personas, id = persona_id)
+        context = self.context_contructor('', PersonaBuscarForm())
+        context['persona'] = persona
+        return render (request, 'Personal/persona-detail.html', context)
+
 class PersonaViewGuardar(PersonaView):
     def get(self, request, *args, **kwargs):
         context = self.context_contructor('Ingresar Persona', PersonaInputForm(initial = {'GestorOpcion': 'SinGestor'}))

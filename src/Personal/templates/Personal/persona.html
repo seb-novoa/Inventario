@@ -12,9 +12,9 @@
   {% if obtenido %}
     {% for persona in obtenido %}
     <div class="">
-      <button type="button" name="button" href="{% url 'PersonaViewDetail' %}">
+      <a href="{% url 'PersonaViewDetail' persona.id %}">
           {{persona}}
-      </button>
+      </a>
 
     </div>
     {% endfor %}

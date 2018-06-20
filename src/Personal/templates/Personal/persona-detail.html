@@ -1,0 +1,25 @@
+<form class="" action="{% url 'PersonaView'%}" method="POST">{% csrf_token %}
+  {{form.as_p}}
+  <button type="submit" name="button">Buscar</button>
+</form>
+
+{{persona.Nombre}}
+{{persona.Apellido}}
+{{persona.ApellidoMaterno}}
+{{persona.Area}}
+{{persona.Puesto}}
+
+
+{% if not persona.Gestor %}
+  <h2>Gestor:</h2>
+  <a href="{% url 'PersonaViewDetail' persona.GestorIdentificador.id %}">{{persona.GestorIdentificador.Nombre}} {{persona.GestorIdentificador.Apellido}}</a>
+
+{% else %}
+  <h2>Gestiona</h2>
+  {% for personal in persona.personas_set.all %}
+  <div class="">
+      <a href="{% url 'PersonaViewDetail' personal.id %}">{{personal.Nombre}}</a>
+  </div>
+
+  {% endfor %}
+{% endif %}
