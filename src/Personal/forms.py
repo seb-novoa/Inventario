@@ -98,3 +98,11 @@ class PersonaEditarForm(forms.models.ModelForm):
             persona = Personas.objects.filter(Nombre = nombre[0], NombreSecundario = nombre[1], Apellido = nombre[2], ApellidoMaterno = ''.join(nombre[3:]), Area = self.cleaned_data['Area'])
             if persona:
                 raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
+
+class PersonaBuscarForm(forms.Form):
+    Nombre = forms.CharField(required = False)
+    Area = forms.ModelChoiceField(queryset = Areas.objects.all(), required = False)
+
+    def clean(self):
+        if not self.cleaned_data['Nombre'] and not self.cleaned_data['Area']:
+            raise forms.ValidationError('Se debe ingresar el nombres o un area')

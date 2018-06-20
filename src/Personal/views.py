@@ -9,7 +9,7 @@ from Personal.models import Puestos, Areas, Personas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
     AreaInputForm, AreaInputFormBuscar,
-    PersonaInputForm, PersonaEditarForm,
+    PersonaInputForm, PersonaEditarForm, PersonaBuscarForm,
 )
 
 class PuestoView(View):
@@ -204,6 +204,61 @@ class PersonaView(View):
 
     def all(self):
         return Personas.objects.all().order_by('Area')
+
+    def get_persona_by_nombre(self, nombre):
+        personas = self.all()
+        nombre_length = len(nombre.split())
+        if nombre_length == 1:
+            if personas.filter(Nombre__startswith = nombre) or personas.filter(Apellido__startswith=nombre) or personas.filter(NombreSecundario__startswith=nombre):
+                return personas.filter(Nombre__startswith = nombre) or personas.filter(Apellido__startswith=nombre) or personas.filter(NombreSecundario__startswith=nombre)
+        elif nombre_length == 2:
+            if personas.filter(Nombre__startswith = nombre[0]) or personas.filter(Apellido__startswith=nombre[1]):
+                return personas.filter(Nombre__startswith = nombre[0]) or personas.filter(Apellido__startswith=nombre[1])
+            if personas.filter(Nombre__startswith = nombre[0]) or personas.filter(NombreSecundario__startswith=nombre[1]):
+                return personas.filter(Nombre__startswith = nombre[0]) or personas.filter(Apellido__startswith=nombre[1])
+        elif nombre_length >= 3:
+            if personas.filter(Nombre__startswith = nombre[0]) or personas.filter(Apellido__startswith=nombre[1]) or  personas.filter(ApellidoMaterno__startswith=nombre[2]):
+                return personas.filter(Nombre__startswith = nombre[0]) or personas.filter(Apellido__startswith=nombre[1]) or  personas.filter(ApellidoMaterno__startswith=nombre[2])
+            if personas.filter(Nombre__startswith = nombre[0]) or personas.filter(NombreSecundario__startswith=nombre[1]) or  personas.filter(Apellido__startswith=nombre[2]):
+                return personas.filter(Nombre__startswith = nombre[0]) or personas.filter(NombreSecundario__startswith=nombre[1]) or  personas.filter(Apellido__startswith=nombre[2])
+
+    def get_persona_by_nombre_y_area(self, nombre, area):
+        personas = self.all()
+        nombre_length = len(nombre.split())
+        if nombre_length == 1:
+            if personas.filter(Nombre__startswith = nombre, Area = area) or personas.filter(Apellido__startswith=nombre, Area = area) or personas.filter(NombreSecundario__startswith=nombre, Area = area):
+                return personas.filter(Nombre__startswith = nombre, Area = area) or personas.filter(Apellido__startswith=nombre, Area = area) or personas.filter(NombreSecundario__startswith=nombre, Area = area)
+        elif nombre_length == 2:
+            if personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(Apellido__startswith=nombre[1], Area = area):
+                return personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(Apellido__startswith=nombre[1], Area = area)
+            if personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(NombreSecundario__startswith=nombre[1], Area = area):
+                return personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(Apellido__startswith=nombre[1], Area = area)
+        elif nombre_length >= 3:
+            if personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(Apellido__startswith=nombre[1], Area = area) or  personas.filter(ApellidoMaterno__startswith=nombre[2], Area = area):
+                return personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(Apellido__startswith=nombre[1], Area = area) or  personas.filter(ApellidoMaterno__startswith=nombre[2], Area = area)
+            if personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(NombreSecundario__startswith=nombre[1], Area = area) or  personas.filter(Apellido__startswith=nombre[2], Area = area):
+                return personas.filter(Nombre__startswith = nombre[0], Area = area) or personas.filter(NombreSecundario__startswith=nombre[1], Area = area) or  personas.filter(Apellido__startswith=nombre[2], Area = area)
+
+    def get(self, request):
+        form = PersonaBuscarForm()
+        return render(request, 'Personal/persona.html', {'form' : form})
+    def post(self, request):
+        form = PersonaBuscarForm(request.POST)
+        if form.is_valid():
+            if not form.cleaned_data['Area']:
+                nombre = form.cleaned_data['Nombre']
+                obtenido = self.get_persona_by_nombre(nombre)
+                context = self.context_contructor('Buscar Personas', form)
+                context['obtenido'] = obtenido
+
+            if form.cleaned_data['Nombre'] and form.cleaned_data['Area']:
+                nombre = form.cleaned_data['Nombre']
+                area   = form.cleaned_data['Area']
+                obtenido = self.get_persona_by_nombre_y_area(nombre, area)
+                print(obtenido)
+                context = self.context_contructor('Buscar Personas', form)
+                context['obtenido'] = obtenido
+        return render(request, 'Personal/persona.html', context)
 
 class PersonaViewGuardar(PersonaView):
     def get(self, request, *args, **kwargs):

@@ -3,11 +3,14 @@ from django.conf.urls import url
 from Personal.views import (
     PuestoView, PuestoViewEditar,
     AreaView, AreaViewGuardar, AreaViewEditar,
+    PersonaView, PersonaViewDetail,
     PersonaViewGuardar, PersonaViewGestor, PersonaViewEditar,
     PersonaViewEditarGuardar, PersonaViewEditarDelete, PersonaViewEditarGestor,
     )
 urlpatterns = [
     # Personal
+    url(r'^$', PersonaView.as_view(), name = 'PersonaView'),
+    url(r'^[0-9]+/$', PersonaViewDetail.as_view(), name = 'PersonaViewDetail'),
     url(r'^nueva/$', PersonaViewGuardar.as_view(), name = 'PersonaViewGuardar'),
     url(r'^gestor/(?P<persona_id>[0-9]+)/$', PersonaViewGestor.as_view(), name = 'PersonaViewGestor'),
     url(r'^editar/$', PersonaViewEditar.as_view(), name = 'PersonaViewEditar'),

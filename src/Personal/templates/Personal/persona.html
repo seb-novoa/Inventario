@@ -1,0 +1,23 @@
+<h1>{{title}}</h1>
+
+<form class="" action="." method="POST">{% csrf_token %}
+  {{form.as_p}}
+  <button type="submit" name="button">Buscar</button>
+</form>
+
+<button type="button" name="button">Crear</button>
+
+<div class="">
+
+  {% if obtenido %}
+    {% for persona in obtenido %}
+    <div class="">
+      <button type="button" name="button" href="{% url 'PersonaViewDetail' %}">
+          {{persona}}
+      </button>
+
+    </div>
+    {% endfor %}
+  {% endif %}
+
+</div>
