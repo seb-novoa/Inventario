@@ -1,11 +1,22 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <title>Inventario</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://intercoolerreleases-leaddynocom.netdna-ssl.com/intercooler-1.2.1.min.js"></script>
+    
+
   </head>
   <body>
-    {% block content %}
+    <div class="container mt-3">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    {% block script %}
     {% endblock %}
   </body>
 </html>

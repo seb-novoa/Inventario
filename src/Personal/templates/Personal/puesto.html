@@ -1,22 +1,21 @@
 {% extends 'Personal/base.html' %}
+{% load static %}
 {% block content %}
-  <div class="">
+
     <h1>{{ title }}</h1>
-    <form class="" action="." method="POST">{% csrf_token %}
+    <form class="form-control" action="." method="POST">{% csrf_token %}
 
       {{ form.Puesto }}
 
-      <div class="">
 
-        <button type="submit" name="btn-guardar">Guardar o Buscar</button>
-
-      </div>
+      <br>
+      <button class="btn btn-secondary" type="submit" name="btn-guardar">Guardar</button>
 
       {{ form.errors }}
     </form>
 
     {% if messages %}
-      <ul class="messages">
+      <ul class="messages" id="Mensajes">
           {% for message in messages %}
           <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
           {% endfor %}
@@ -34,14 +33,87 @@
       </form>
     {% endif %}
     <br>
-    {% for puesto in puestos %}
+
+
+    {% if puestos %}
+      <h3>Buscar un puesto</h3>
+      <input type="text" id="buscar" placeholder="Buscar" class="form-control">
+
       <form class="" action="." method="POST">{% csrf_token %}
-        <div class="">
-          {{ puesto.Puesto }}
-          <button type="submit" name="btn-editar" value="{{ puesto.id }}">Editar</button>
-          <button type="submit" name="btn-eliminar" value="{{ puesto.id }}">Eliminar</button>
-        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                Lista de puestos
+              </th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="myTable">
+            {% for puesto in puestos %}
+
+                <tr>
+                  <td>{{ puesto.Puesto }}</td>
+                  <td><button class="btn btn-secondary" type="submit" name="btn-editar" value="{{ puesto.id }}">Editar</button></td>
+                  <td>
+
+
+                  <form >{% csrf_token %}
+                    <div ic-get-from="{% url "PuestoViewEditar" puesto.id %}" ic-target = "#myModal" ic-select-from-response="#myModal">
+                        <button  class="btn btn-secondary" type="button" name="btn-modal"  data-toggle="modal" data-target="#myModal" >
+                         editar con modal
+                        </button>
+                    </div>
+                  </form>
+
+                  </td>
+                  <td><button class="btn btn-danger" ic-confirm="¿Estas seguro?" type="submit" name="btn-eliminar" value="{{ puesto.id }}">Eliminar</button></td>
+                </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
       </form>
-    {% endfor %}
-  </div>
+    {% endif %}
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title" id="tiutlo">Editar el pusto de trabajo {{puesto.Puesto}} . {{value}}</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+
+            <form id="actualizar" ic-post-to="{{puesto.get_absolute_url}}" ic-target="#myTable" ic-select-from-response="#myTable" ic-on-error="No se encontro">{% csrf_token %}
+              {{formEditar.as_p}}
+            </form>
+
+            {{formEditar.errors}}
+
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    {% block script %}
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+      <script src="{% static "js/buscar.js" %}"></script>
+      <script src="{% static "js/hide-modal.js" %}"></script>
+
+    {% endblock %}
+
 {% endblock %}

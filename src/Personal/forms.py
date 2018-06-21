@@ -9,7 +9,7 @@ from .validators import (
     )
 
 class PuestosInputForm(forms.Form):
-    Puesto = forms.CharField( validators = [value_exists])
+    Puesto = forms.CharField( validators = [value_exists], widget = forms.TextInput(attrs = {'class' : 'form-control'}))
 
     def clean_Puesto(self):
         data = self.cleaned_data['Puesto']
@@ -17,8 +17,18 @@ class PuestosInputForm(forms.Form):
             data = data.lower()
         return data
 
-class PuestosInputFormEditar(PuestosInputForm):
+class PuestosInputFormEditar(forms.ModelForm):
     Puesto = forms.CharField(validators = [value_is_already_exists])
+    class Meta:
+        model = Puestos
+        fields = '__all__'
+
+
+    def clean_Puesto(self):
+        data = self.cleaned_data['Puesto']
+        if data is not data.lower():
+            data = data.lower()
+        return data
 
 
 class PuestosInputFormGuardar(PuestosInputForm):

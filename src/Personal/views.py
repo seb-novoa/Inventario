@@ -2,6 +2,10 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.urls import reverse_lazy
+from django.http import HttpResponse
+
+from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic.edit import UpdateView
 
 import re
 
@@ -24,14 +28,19 @@ class PuestoView(View):
         return context
 
     def get(self, request, *args, **kwargs):
+
         form = PuestosInputForm()
-        context = self.context_contructor('Puestos', form)
+        context = self.context_contructor('Puestos de trabajo', form)
         context['puestos'] = self.all_puestos()
+        if request.GET.get('ic-request'):
+            context['values'] = 'bangindi'
         return render(request, 'Personal/puesto.html', context)
 
     def post(self, request, *args, **kwargs):
+        print('bandingus')
+        print(request.POST)
         form = PuestosInputForm()
-        context = self.context_contructor('Puestos', form)
+        context = self.context_contructor('Puestos de trabajo', form)
         if 'btn-guardar' in request.POST:
             form = PuestosInputFormGuardar(request.POST)
             if form.is_valid():
@@ -40,7 +49,7 @@ class PuestoView(View):
                 if created:
                     messages.success(request, 'El puesto "{p}" ha sido creado'.format(p = obj.Puesto))
                 else:
-                    context['obj']= obj
+                    messages.error(request, 'El puesto "{p}" ya se encuentra registrado'.format(p = obj.Puesto))
 
         if 'btn-editar' in request.POST:
             new_puesto = request.POST.get('btn-editar')
@@ -57,6 +66,15 @@ class PuestoView(View):
 
 class PuestoViewEditar(View):
     def get(self, request, puesto_id, *args, **kwargs):
+        if request.GET.get('ic-request'):
+            puesto = get_object_or_404(Puestos, id = puesto_id)
+            context = {
+                'formEditar' : PuestosInputForm(),
+                'value' : 'wawingis',
+                'puesto' : puesto,
+                'url' : puesto.id
+                }
+            return render(request, 'Personal/puesto.html',context)
         puesto = Puestos.objects.get(id  = puesto_id)
         form = PuestosInputFormEditar()
         context = {
@@ -307,8 +325,7 @@ class PersonaViewEditar(PersonaView):
             return redirect('PersonaViewEditarGestor', persona.id)
         return render(request, 'Personal/persona-editar.html', {'personas' : self.all()})
 
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic.edit import UpdateView
+
 class PersonaViewEditarGuardar(SuccessMessageMixin, UpdateView):
     model = Personas
     form_class = PersonaEditarForm
