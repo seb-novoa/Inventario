@@ -3,15 +3,25 @@
 {% block content %}
   <h1>{{title}}</h1>
 
-  <form class="" action="." method="POST">{% csrf_token %}
-    <div class="">
+  <form class="form-control" action="." method="POST">{% csrf_token %}
+    <div class="form-group">
       {{form.as_p}}
     </div>
 
-    <button type="submit" name="button", value="Update">Guardar</button>
-    <form>
-    <input type="button" value="Volver atras" onclick="history.go(-1)">
-    </form>
+    <button type="submit" class="btn btn-primary" name="button", value="Update">Guardar</button>
+  </form>
+
+  <br>
+
+  <form class="" action="." method="POST">{% csrf_token %}
+    <div class="text-right">
+      <button class="btn btn-danger" type="submit" name="btn-cancelar">Cancelar</button>
+    </div>
+  </form>
+
+
+    <form action="." method="POST">{% csrf_token %}
+
     {% for field, error in form.errors.items %}
       {{error}}
     {% endfor%}

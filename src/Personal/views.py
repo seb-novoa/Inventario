@@ -167,7 +167,7 @@ class AreaViewEditar(SuccessMessageMixin, UpdateView):
         context['title'] = 'Editar Área'
         return context
 
-    def post(seld, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         if 'btn-cancelar' in request.POST:
             return redirect('AreaView')
         return HttpResponseForbidden()
@@ -287,14 +287,19 @@ class PersonaView(View):
 
     def get(self, request):
         form = PersonaBuscarForm()
-        return render(request, 'Personal/persona.html', {'form' : form})
+        context =   {
+            'form'  :   form,
+            'title' :   'Personal'
+        }
+        return render(request, 'Personal/persona.html', context)
     def post(self, request):
         form = PersonaBuscarForm(request.POST)
+        context = self.context_contructor('Buscar Personas', form)
         if form.is_valid():
             if not form.cleaned_data['Area']:
                 nombre = form.cleaned_data['Nombre']
                 obtenido = self.get_persona_by_nombre(nombre)
-                context = self.context_contructor('Buscar Personas', form)
+
                 context['obtenido'] = obtenido
 
             if form.cleaned_data['Nombre'] and form.cleaned_data['Area']:
@@ -302,15 +307,19 @@ class PersonaView(View):
                 area   = form.cleaned_data['Area']
                 obtenido = self.get_persona_by_nombre_y_area(nombre, area)
                 print(obtenido)
-                context = self.context_contructor('Buscar Personas', form)
+
                 context['obtenido'] = obtenido
         return render(request, 'Personal/persona.html', context)
 
 class PersonaViewDetail(PersonaView):
     def get(self, request, persona_id):
         persona = get_object_or_404(Personas, id = persona_id)
-        context = self.context_contructor('', PersonaBuscarForm())
+        context = self.context_contructor('Personal', PersonaBuscarForm())
         context['persona'] = persona
+        # if persona.GestorIdentificador:
+        #     context['gestor'] = persona.get_gestor_url()
+
+
         return render (request, 'Personal/persona-detail.html', context)
 
 class PersonaViewGuardar(PersonaView):
@@ -319,6 +328,8 @@ class PersonaViewGuardar(PersonaView):
         return render(request, 'Personal/persona-guardar.html', context)
 
     def post(self, request, *args, **kwargs):
+        if 'btn-cancelar' in request.POST:
+            return redirect('PersonaView')
         form = PersonaInputForm(request.POST)
         if form.is_valid():
             nombre = form.cleaned_data['Nombre']
@@ -364,6 +375,17 @@ class PersonaViewEditarGuardar(SuccessMessageMixin, UpdateView):
     template_name = 'Personal/persona-guardar.html'
     success_url = reverse_lazy('PersonaViewEditar')
     success_message = 'Persona modificada'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title']    =   'Editar personal'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if 'btn-cancelar' in request.POST:
+            return redirect('PersonaViewEditar')
+        return HttpResponseForbidden()
+
 
 from django.views.generic.edit import DeleteView
 class PersonaViewEditarDelete(SuccessMessageMixin, DeleteView):

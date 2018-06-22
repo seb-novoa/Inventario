@@ -1,25 +1,61 @@
 {% extends 'Personal/base.html' %}
-
+{% load static %}
 {% block content %}
 <h1>{{title}}</h1>
-<form class="" action="." method="POST">{% csrf_token %}
-  {% for persona in personas%}
-    <div class="">
-      {{persona}}
-      <button type="submit" name="btn-editar" value="{{persona.id}}">Editar</button>
-      <button type="submit" name="btn-gestionar" value="{{persona.id}}">Gestionar</button>
-      <button type="submit" name="btn-eliminar" value="{{persona.id}}">Eliminar</button>
-    </div>
-  {% endfor %}
 
-  {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+{% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+{% endif %}
+<br>
+<div class="">
+  <h3>Buscar una persona</h3>
+  <input type="text" id="buscar" placeholder="Buscar.." class="form-control">
+  <br>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido </th>
+        <th>Area</th>
+        <th>Gestor</th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      <form class="" action="." method="POST">{% csrf_token %}
+        {% for persona in personas%}
+        <tr>
+          <td>{{persona.Nombre}}</td>
+          <td>{{persona.Apellido}}</td>
+          <td>{{persona.Area}}</td>
+          <td>{{persona.Gestor}}</td>
+          <td><button class="btn btn-secondary" type="submit" name="btn-editar" value="{{persona.id}}">Editar</button></td>
+          <td><button class="btn btn-secondary"type="submit" name="btn-gestionar" value="{{persona.id}}">Gestionar</button></td>
+          <td><button class="btn btn-danger"type="submit" name="btn-eliminar" value="{{persona.id}}">Eliminar</button></td>
+        </tr>
         {% endfor %}
-    </ul>
+
+      </form>
+    </tbody>
+
+  </table>
+</div>
+
+
+  {% if not personas %}
+    <h5>No hay personal registrado </h5>
   {% endif %}
 
-</form>
 
+  {% block  script %}
+    <script src="{% static "js/buscar.js" %}">
+
+    </script>
+  {% endblock %}
 {% endblock %}

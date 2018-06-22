@@ -29,7 +29,7 @@ class Areas(models.Model):
     def area_str(self):
         self.Area = self.Area[0].upper() + self.Area[1:]
         return self.Area
-        
+
     def __str__(self):
         self.Area = self.Area[0].upper() + self.Area[1:]
         return self.Area
@@ -76,3 +76,7 @@ class Personas(models.Model):
 
     def get_absolute_url(self):
         return reverse('PersonaViewGestor', args = [self.id])
+
+    def get_gestor_url(self):
+        gestor = self.GestorIdentificador
+        return reverse('PersonaViewDetail', args=[self.GestorIdentificador])

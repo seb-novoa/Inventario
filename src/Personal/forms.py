@@ -76,9 +76,9 @@ class PersonaInputForm(forms.Form):
         ('SinGestor', 'Sin gestor')
     ]
 
-    Nombre = forms.CharField()
-    Area = forms.ModelChoiceField(queryset = Areas.objects.all())
-    Puesto = forms.ModelChoiceField(queryset = Puestos.objects.all())
+    Nombre = forms.CharField(widget = forms.TextInput(attrs = {'class'  :   'form-control'}))
+    Area = forms.ModelChoiceField(queryset = Areas.objects.all(), widget    =   forms.fields.Select(attrs   ={'class'   :   'form-control'}))
+    Puesto = forms.ModelChoiceField(queryset = Puestos.objects.all(), widget    =   forms.fields.Select(attrs   ={'class'   :   'form-control'}))
     GestorOpcion = forms.ChoiceField(choices = CHOICES_FIELD, widget = forms.RadioSelect())
 
     # def clean_Nombre(self):
@@ -104,9 +104,19 @@ class PersonaInputForm(forms.Form):
 
 
 class PersonaEditarForm(forms.models.ModelForm):
+    Nombre  =   forms.CharField(widget = forms.TextInput(attrs= {'class' : 'form-control'}))
     class Meta:
         model= Personas
         fields = ('Nombre', 'Area', 'Puesto',)
+        widgets  =   {
+            'Area'  :   forms.fields.Select( attrs   ={
+                'class' :   'form-control'
+            }),
+            'Puesto'  :   forms.fields.Select( attrs   ={
+                'class' :   'form-control'
+            })
+        }
+
 
     def clean(self):
         nombre = self.cleaned_data['Nombre'].split()
@@ -122,8 +132,8 @@ class PersonaEditarForm(forms.models.ModelForm):
                 raise forms.ValidationError('ya existe esta persona en esta área', code = 'Nombre')
 
 class PersonaBuscarForm(forms.Form):
-    Nombre = forms.CharField(required = False)
-    Area = forms.ModelChoiceField(queryset = Areas.objects.all(), required = False)
+    Nombre = forms.CharField(required = False, widget   =   forms.TextInput(attrs   =   {'class'    :   'form-control', 'placeholder'   :   'Buscar'}))
+    Area = forms.ModelChoiceField(queryset = Areas.objects.all(), required = False, widget  =   forms.fields.Select(attrs   =   {'class'    :   'form-control'}))
 
     def clean(self):
         if not self.cleaned_data['Nombre'] and not self.cleaned_data['Area']:

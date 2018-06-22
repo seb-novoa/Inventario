@@ -1,25 +1,66 @@
-<form class="" action="{% url 'PersonaView'%}" method="POST">{% csrf_token %}
-  {{form.as_p}}
-  <button type="submit" name="button">Buscar</button>
-</form>
+{% extends 'Personal/base.html' %}
+{% block content %}
 
-{{persona.Nombre}}
-{{persona.Apellido}}
-{{persona.ApellidoMaterno}}
-{{persona.Area}}
-{{persona.Puesto}}
+<!-- <form class="" action="." method="POST">{% csrf_token %}
 
+  <div class="row">
+    <div class="col-8">
+      {{form.Nombre}}
+    </div>
+    <div class="col-4">
+      {{form.Area}}
+    </div>
+  </div>
 
-{% if not persona.Gestor %}
-  <h2>Gestor:</h2>
-  <a href="{% url 'PersonaViewDetail' persona.GestorIdentificador.id %}">{{persona.GestorIdentificador.Nombre}} {{persona.GestorIdentificador.Apellido}}</a>
+  <br>
+  <div class="text-right">
+    <a href="{% url "PersonaViewGuardar" %}" class="btn btn-primary">Crear</a>
+    <button class="btn btn-primary" type="submit" name="button">Buscar</button>
+  </div>
 
-{% else %}
+</form> -->
+
+<h1>{{title}}</h1>
+
+<div class="row">
+  <div class="form-control">
+    <div class="col">
+      <strong>Nombre: </strong>
+      {{persona.Nombre}}
+      {{persona.Apellido}}
+      {{persona.ApellidoMaterno}}
+      {{persona.Area}}
+      {{persona.Puesto}}
+    </div>
+    <div class="col-6">
+      <strong>Area:</strong>
+      {{persona.Area}}
+    </div>
+    <div class="col-6">
+      <strong>Puesto:</strong>
+      {{persona.Puesto}}
+    </div>
+    {% if persona.GestorIdentificador %}
+    <div class="col-6">
+
+      <strong>Gestor:</strong>
+      <a href="{% url "PersonaViewDetail" persona.GestorIdentificador.id%}">  {{persona.GestorIdentificador.Nombre}} {{persona.GestorIdentificador.Apelligo}} </a>
+
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if persona.Gestor %}
   <h2>Gestiona</h2>
   {% for personal in persona.personas_set.all %}
   <div class="">
-      <a href="{% url 'PersonaViewDetail' personal.id %}">{{personal.Nombre}}</a>
+    <a href="{% url 'PersonaViewDetail' personal.id %}">{{personal.Nombre}}</a>
   </div>
-
   {% endfor %}
 {% endif %}
+
+
+
+
+{% endblock %}
