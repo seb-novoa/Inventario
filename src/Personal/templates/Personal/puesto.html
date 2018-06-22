@@ -22,16 +22,7 @@
       </ul>
   {% endif %}
 
-    {% if obj %}
-      <h2>Puesto encontrado</h2>
-      <form class="" action="." method="POST">{% csrf_token %}
-        <div class="">
-          {{ obj.Puesto }}
-          <button type="submit" name="btn-editar" value="{{ obj.id }}">Editar</button>
-          <button type="submit" name="btn-eliminar" value="{{ obj.id }}">Eliminar</button>
-        </div>
-      </form>
-    {% endif %}
+
     <br>
 
 
@@ -44,7 +35,7 @@
           <thead>
             <tr>
               <th>
-                Lista de puestos
+                Lista de puestos de trabajo
               </th>
               <th></th>
               <th></th>
@@ -53,21 +44,9 @@
           <tbody id="myTable">
             {% for puesto in puestos %}
 
-                <tr>
-                  <td>{{ puesto.Puesto }}</td>
-                  <td><button class="btn btn-secondary" type="submit" name="btn-editar" value="{{ puesto.id }}">Editar</button></td>
-                  <td>
-
-
-                  <form >{% csrf_token %}
-                    <div ic-get-from="{% url "PuestoViewEditar" puesto.id %}" ic-target = "#myModal" ic-select-from-response="#myModal">
-                        <button  class="btn btn-secondary" type="button" name="btn-modal"  data-toggle="modal" data-target="#myModal" >
-                         editar con modal
-                        </button>
-                    </div>
-                  </form>
-
-                  </td>
+                <tr >
+                  <td id="{{puesto.id}}">{{ puesto}}</td>
+                  <td><button class="btn btn-secondary" ic-target="#{{puesto.id}}" ic-get-from="{% url "PuestoViewEditar"  puesto.id%}"> Editar</button></td>
                   <td><button class="btn btn-danger" ic-confirm="¿Estas seguro?" type="submit" name="btn-eliminar" value="{{ puesto.id }}">Eliminar</button></td>
                 </tr>
 
@@ -77,42 +56,12 @@
       </form>
     {% endif %}
 
-    <!-- The Modal -->
-    <div class="modal" id="myModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
 
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title" id="tiutlo">Editar el pusto de trabajo {{puesto.Puesto}} . {{value}}</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-
-            <form id="actualizar" ic-post-to="{{puesto.get_absolute_url}}" ic-target="#myTable" ic-select-from-response="#myTable" ic-on-error="No se encontro">{% csrf_token %}
-              {{formEditar.as_p}}
-            </form>
-
-            {{formEditar.errors}}
-
-          </div>
-
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-
-        </div>
-      </div>
-    </div>
 
     {% block script %}
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
       <script src="{% static "js/buscar.js" %}"></script>
-      <script src="{% static "js/hide-modal.js" %}"></script>
 
     {% endblock %}
 

@@ -37,8 +37,6 @@ class PuestoView(View):
         return render(request, 'Personal/puesto.html', context)
 
     def post(self, request, *args, **kwargs):
-        print('bandingus')
-        print(request.POST)
         form = PuestosInputForm()
         context = self.context_contructor('Puestos de trabajo', form)
         if 'btn-guardar' in request.POST:
@@ -66,30 +64,31 @@ class PuestoView(View):
 
 class PuestoViewEditar(View):
     def get(self, request, puesto_id, *args, **kwargs):
-        if request.GET.get('ic-request'):
-            puesto = get_object_or_404(Puestos, id = puesto_id)
-            context = {
-                'formEditar' : PuestosInputForm(),
-                'value' : 'wawingis',
-                'puesto' : puesto,
-                'url' : puesto.id
-                }
-            return render(request, 'Personal/puesto.html',context)
+        # if request.GET.get('ic-request'):
+        #     puesto = get_object_or_404(Puestos, id = puesto_id)
+        #     context = {
+        #         'formEditar' : PuestosInputForm(instance = puesto),
+        #         'value' : 'wawingis',
+        #         }
         puesto = Puestos.objects.get(id  = puesto_id)
-        form = PuestosInputFormEditar()
+        form = PuestosInputFormEditar(instance = puesto)
         context = {
             'title': 'Editar puesto "{p}"'.format(p = puesto),
             'form' : form
         }
+        context['puesto'] = puesto
         return render(request, 'Personal/puesto-editar.html', context)
 
     def post(self, request, puesto_id, *args, **kwargs):
+        if 'btn-cancelar' in request.POST:
+            return redirect('PuestoView')
         form = PuestosInputFormEditar(request.POST)
         puesto = Puestos.objects.get(id  = puesto_id)
         context = {
             'title': 'Editar puesto "{p}"'.format(p = puesto),
             'form' : form
         }
+
         if form.is_valid():
             new_puesto = form.cleaned_data.get('Puesto')
             obj, created = Puestos.objects.update_or_create(defaults = {'Puesto' : new_puesto},  id= puesto_id)
@@ -97,7 +96,11 @@ class PuestoViewEditar(View):
                 messages.error(request, 'El puesto no ha sido creado')
             else:
                 messages.success(request, 'El puesto se ha guardado')
-                return redirect('/persona/puesto/')
+                return redirect('PuestoView')
+        else:
+            messages.error(request, 'El puesto ya existe')
+            return redirect('PuestoView')
+        context['puesto'] = puesto
         return render(request, 'Personal/puesto-editar.html', context)
 
 class AreaView(View):
