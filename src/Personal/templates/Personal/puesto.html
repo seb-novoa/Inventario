@@ -4,6 +4,7 @@
 
     <h1>{{ title }}</h1>
     <form class="form-control" action="." method="POST">{% csrf_token %}
+      <h3>Agregar puesto de trabajo</h3>
 
       {{ form.Puesto }}
 
@@ -54,6 +55,8 @@
           </tbody>
         </table>
       </form>
+    {% else %}
+      <h3>No hay puestos registrados</h3>
     {% endif %}
 
 

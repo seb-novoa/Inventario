@@ -23,13 +23,16 @@ class Areas(models.Model):
 
     def save(self, *args, **kwargs):
         self.CDC = self.CDC.upper()
+        self.Area = self.Area.lower()
         super(Areas, self).save(*args, **kwargs)
 
-
+    def area_str(self):
+        self.Area = self.Area[0].upper() + self.Area[1:]
+        return self.Area
+        
     def __str__(self):
-        arealow = self.Area
-        area = arealow[0].upper() + arealow[1:]
-        return area
+        self.Area = self.Area[0].upper() + self.Area[1:]
+        return self.Area
 
     def get_absolute_url(self):
         return reverse('AreaViewEditar', args = [self.id])

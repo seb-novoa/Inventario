@@ -35,7 +35,7 @@ class PuestosInputFormGuardar(PuestosInputForm):
     Puesto = forms.CharField()
 
 
-class AreaInputForm(forms.Form):
+class AreaInputForm(forms.ModelForm):
     CDC = forms.CharField(
         validators = [value_is_correct_expression_regular, value_cdc_is_already_exists],
         widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}
@@ -45,11 +45,24 @@ class AreaInputForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Area'}
     ))
 
+    class Meta:
+        model   =   Areas
+        fields  =   ('CDC', 'Area', )
+
     def clean_Area(self):
         data = self.cleaned_data['Area']
         if data is not data.lower():
             data = data.lower()
         return data
+
+class AreaEditarForm(AreaInputForm):
+    CDC = forms.CharField(
+        validators = [value_is_correct_expression_regular],
+        widget=forms.TextInput(attrs={'placeholder': 'Centro de costo'}
+        ))
+    Area = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Area'}
+    ))
 
 class AreaInputFormBuscar(forms.Form):
     Buscar = forms.CharField(
@@ -57,7 +70,6 @@ class AreaInputFormBuscar(forms.Form):
         )
 
 class PersonaInputForm(forms.Form):
-
     CHOICES_FIELD   =   [
         ('Gestor', 'Gestor'),
         ('AsignarGestor', 'Asignar gestor'),

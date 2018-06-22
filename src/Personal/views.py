@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.urls import reverse_lazy
 from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.edit import UpdateView
@@ -12,7 +13,7 @@ import re
 from Personal.models import Puestos, Areas, Personas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
-    AreaInputForm, AreaInputFormBuscar,
+    AreaInputForm, AreaInputFormBuscar, AreaEditarForm,
     PersonaInputForm, PersonaEditarForm, PersonaBuscarForm,
 )
 
@@ -125,20 +126,20 @@ class AreaView(View):
         return areas
 
     def get(self, request, *args, **kwargs):
-        context = self.context_contructor('Areas', AreaInputFormBuscar())
+        context = self.context_contructor('Áreas', AreaInputFormBuscar())
         context['areas'] = self.all_areas()
         return render(request, 'Personal/area.html', context)
 
     def post(self, request, *args, **kwargs):
-        context = self.context_contructor('Areas', AreaInputFormBuscar())
+        context = self.context_contructor('Áreas', AreaInputFormBuscar())
 
 
-        if 'btn-buscar' in request.POST:
-            form = AreaInputFormBuscar(request.POST)
-            context = self.context_contructor('Area buscando....', form)
-            if form.is_valid():
-                obj = self.objecto(form.cleaned_data.get('Buscar'))
-                context['obj'] = obj
+        # if 'btn-buscar' in request.POST:
+        #     form = AreaInputFormBuscar(request.POST)
+        #     context = self.context_contructor('Area buscando....', form)
+        #     if form.is_valid():
+        #         obj = self.objecto(form.cleaned_data.get('Buscar'))
+        #         context['obj'] = obj
 
         if 'btn-editar' in request.POST:
             new_area = request.POST.get('btn-editar')
@@ -154,28 +155,50 @@ class AreaView(View):
         context['areas'] = self.all_areas()
         return render(request, 'Personal/area.html', context)
 
-class AreaViewEditar(AreaView):
-    def get(self, request, area_id, *args, **kwargs):
-        form  = AreaInputForm
-        instance = Areas.objects.get(id = area_id)
-        context = self.context_contructor('Editar área {i}'.format(i = instance.Area), form)
-        return render(request, 'Personal/area-guardar.html', context)
+class AreaViewEditar(SuccessMessageMixin, UpdateView):
+    model = Areas
+    fields  =   ('CDC', 'Area', )
+    template_name = 'Personal/area-guardar.html'
+    success_url = reverse_lazy('AreaView')
+    success_message = 'Area guardada'
 
-    def post(self, request, area_id, *args, **kwargs):
-        form = AreaInputForm(request.POST)
-        area = Areas.objects.get(id  = area_id)
-        context = self.context_contructor('Editar área {i}'.format(i = area), form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Editar Área'
+        return context
 
-        if form.is_valid():
-            new_area = form.cleaned_data.get('Area')
-            new_cdc = form.cleaned_data.get('CDC')
-            obj, created = Areas.objects.update_or_create(defaults = {'Area' : new_area, 'CDC': new_cdc},  id= area_id)
-            if created:
-                messages.error(request, 'El area no ha sido creado')
-            else:
-                messages.success(request, 'El area se ha guardado')
-                return redirect('/persona/area/')
-        return render(request, 'Personal/area-guardar.html', context)
+    def post(seld, request, *args, **kwargs):
+        if 'btn-cancelar' in request.POST:
+            return redirect('AreaView')
+        return HttpResponseForbidden()
+
+
+
+# class AreaViewEditar(AreaView):
+#     def get(self, request, area_id, *args, **kwargs):
+#         instance = Areas.objects.get(id = area_id)
+#         form  = AreaEditarForm(instance = instance)
+#         context = self.context_contructor('Editar área {i}'.format(i = instance.Area), form)
+#         return render(request, 'Personal/area-guardar.html', context)
+#
+#     def post(self, request, area_id, *args, **kwargs):
+#         if 'btn-cancelar' in request.POST:
+#             return redirect('AreaView')
+#         area = Areas.objects.get(id  = area_id)
+#         form = AreaEditarForm(request.POST)
+#         context = self.context_contructor('Editar área {i}'.format(i = area), form)
+#
+#         if form.is_valid():
+#             new_area = form.cleaned_data.get('Area')
+#             new_cdc = form.cleaned_data.get('CDC')
+#             created = area.update( CDC = new_cdc, Area = new_area)
+#             # obj, created = Areas.objects.update_or_create(defaults = {'Area' : new_area, 'CDC': new_cdc},  id= area_id)
+#             # if created:
+#             #     messages.error(request, 'El area no ha sido creado')
+#             # else:
+#             messages.success(request, 'El area se ha guardado')
+#             return redirect('/persona/area/')
+#         return render(request, 'Personal/area-guardar.html', context)
 
 class AreaViewGuardar(AreaView):
     template = 'Personal/area-guardar.html'
@@ -191,6 +214,8 @@ class AreaViewGuardar(AreaView):
 
 
     def post(self, request, *args, **kwargs):
+        if 'btn-cancelar' in request.POST:
+            return redirect('AreaView')
         form = AreaInputForm(request.POST)
         context = self.context_contructor('Area', form)
         if form.is_valid():
@@ -200,7 +225,7 @@ class AreaViewGuardar(AreaView):
             if created:
                 context= self.context_contructor('Area', form)
                 messages.success(request, 'El área ha sido creada')
-                context['area'] = obj
+                return redirect('AreaView')
             else:
                 context= self.context_contructor('Area', form)
                 context['area'] = obj
@@ -314,7 +339,11 @@ class PersonaViewGuardar(PersonaView):
 
 class PersonaViewEditar(PersonaView):
     def get(self, request):
-        return render(request, 'Personal/persona-editar.html', {'personas' : self.all()})
+        context = {
+            'title' :   'Editar Personal',
+            'personas' : self.all()
+        }
+        return render(request, 'Personal/persona-editar.html', context)
 
     def post(self, request):
         if 'btn-editar' in request.POST:

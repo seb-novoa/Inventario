@@ -1,3 +1,7 @@
+{% extends 'Personal/base.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
 <form class="" action="." method="POST">{% csrf_token %}
   {% for persona in personas%}
     <div class="">
@@ -17,3 +21,5 @@
   {% endif %}
 
 </form>
+
+{% endblock %}
