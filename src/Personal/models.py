@@ -49,6 +49,11 @@ class Personas(models.Model):
     Gestor = models.BooleanField(default = False)
     GestorIdentificador  =   models.ForeignKey('self', null = True)
 
+    def nombre_completo(self):
+        if self.NombreSecundario:
+            return '{0} {1} {2} {3}'.format(self.Nombre, self.NombreSecundario, self.Apellido, self.ApellidoMaterno)
+        else :
+            return '{0} {1} {2} '.format(self.Nombre, self.Apellido, self.ApellidoMaterno)
 
     def split_Nombre(self, nom):
         nombre = nom.split()
@@ -64,12 +69,14 @@ class Personas(models.Model):
             self.ApellidoMaterno = ''.join(nombre[3:])
 
     def save(self, *args, **kwargs):
+        self.Nombre = self.Nombre.lower()
         self.split_Nombre(self.Nombre)
         super(Personas, self).save(*args, **kwargs)
 
     def gestor(self):
         self.Gestor = True
         self.save()
+
 
     def __str__(self):
         return '{0} {1} del area {2}'.format(self.Nombre, self.Apellido, self.Area)

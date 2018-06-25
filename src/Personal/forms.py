@@ -104,7 +104,17 @@ class PersonaInputForm(forms.Form):
 
 
 class PersonaEditarForm(forms.models.ModelForm):
+
+
+
+    def __init__(self, *args, **kwargs):
+        print(args)
+        print(kwargs['instance'].nombre_completo())
+        super(PersonaEditarForm, self).__init__(*args, **kwargs)
+        self.initial['Nombre'] = kwargs['instance'].nombre_completo()
+
     Nombre  =   forms.CharField(widget = forms.TextInput(attrs= {'class' : 'form-control'}))
+
     class Meta:
         model= Personas
         fields = ('Nombre', 'Area', 'Puesto',)
@@ -116,6 +126,8 @@ class PersonaEditarForm(forms.models.ModelForm):
                 'class' :   'form-control'
             })
         }
+
+
 
 
     def clean(self):

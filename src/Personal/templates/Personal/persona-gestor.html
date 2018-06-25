@@ -1,16 +1,31 @@
-<form class="" action="." method="POST">{% csrf_token %}
+{% extends 'Personal/base.html' %}
 
-    {% for persona in personas %}
-      {% if persona.id !=  persona_id%}
+{% block content %}
 
-        <div class="">
-          <input type="checkbox" id="{{persona.id}}" name="choices" value="{{persona.id}}" {% if persona in obj.personas_set.all%} checked {% endif %}>
-          <label for="{{persona.id}}">{{persona.Nombre}} {{persona.Apellido}}</label>
-        </div>
-      
+<h1>Gestión</h1>
+
+<div class="form-control ">
+  <h3>Personal dentro del área</h3>
+  <form class="form-group" action="." method="POST">{% csrf_token %}
+      {% if peronas %}
+      {% for persona in personas %}
+        {% if persona.id !=  persona_id%}
+
+          <div class="form-check">
+            <input type="checkbox" id="{{persona.id}}" name="choices" value="{{persona.id}}" {% if persona in obj.personas_set.all%} checked {% endif %}>
+            <label for="{{persona.id}}">{{persona.Nombre}} {{persona.Apellido}}</label>
+          </div>
+
+        {% endif %}
+      {% endfor %}
+      {% else %}
+        <h3>No hay personal que gestionar</h3>
       {% endif %}
-    {% endfor %}
 
-    <br>
-    <button type="submit" name="button">Guardar</button>
-</form>
+      <br>
+      <button class="btn btn-primary" type="submit" name="button">Guardar</button>
+  </form>
+</div>
+
+
+{% endblock %}

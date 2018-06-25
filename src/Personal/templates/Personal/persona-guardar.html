@@ -20,12 +20,10 @@
   </form>
 
 
-    <form action="." method="POST">{% csrf_token %}
-
-    {% for field, error in form.errors.items %}
+    <!-- {% for field, error in form.errors.items %}
       {{error}}
-    {% endfor%}
-  </form>
+    {% endfor%} -->
+
   {% if messages %}
     <ul class="messages">
         {% for message in messages %}

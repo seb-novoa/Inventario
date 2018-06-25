@@ -384,7 +384,7 @@ class PersonaViewEditarGuardar(SuccessMessageMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         if 'btn-cancelar' in request.POST:
             return redirect('PersonaViewEditar')
-        return HttpResponseForbidden()
+        return super(PersonaViewEditarGuardar, self).post(self, request, *args, **kwargs)
 
 
 from django.views.generic.edit import DeleteView
@@ -446,6 +446,7 @@ class PersonaViewGestor(PersonaView):
             context = {
                 'personas':personas,
                 'persona_id':int(persona_id),
+                'obj' : obj,
             }
 
             template = self.template(obj)
@@ -453,6 +454,7 @@ class PersonaViewGestor(PersonaView):
 
     def post(self, request, persona_id):
         obj = get_object_or_404(Personas, id = persona_id)
+        messages.success(request, 'Gestion Agregada')
         if obj.Gestor:
             personas = obj.Area.personas_set.all()
             context = {
@@ -461,6 +463,7 @@ class PersonaViewGestor(PersonaView):
             }
             ids = request.POST.getlist('choices')
             personas = Personas.objects.filter(id__in = ids).update(GestorIdentificador = obj)
+            return redirect('PersonaView')
 
         else:
             personas = obj.Area.personas_set.filter(Gestor = True)
@@ -472,7 +475,10 @@ class PersonaViewGestor(PersonaView):
             gestor = get_object_or_404(Personas, id = id)
             obj.GestorIdentificador = gestor
             obj.save()
+
+            return redirect('PersonaView')
         template = self.template(obj)
+
         return render(request, template, context)
 
 class PersonaViewEditarGestor(PersonaViewGestor):
