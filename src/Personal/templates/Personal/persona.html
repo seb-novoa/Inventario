@@ -32,7 +32,20 @@
 {% endif %}
 
 
-<div class="">
+  {% if personal %}
+  <div class="form-context">
+    <h1>{{area}}  </h1>
+    <strong>Número total de personas registradas del área:</strong>  {{area.personas_set.all.count}}
+    <h5>Personal</h5>
+  {% for persona in personal %}
+  <div class="">
+    <a href="{% url 'PersonaViewDetail' persona.id %}">
+        {{persona}}
+    </a>
+
+  </div>
+  {% endfor %}
+  {% endif %}
 
   {% if obtenido %}
     {% for persona in obtenido %}
@@ -43,9 +56,9 @@
 
     </div>
     {% endfor %}
+  </div>
   {% endif %}
 
-</div>
 
 
 {% endblock %}

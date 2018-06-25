@@ -7,7 +7,7 @@
 <div class="form-control ">
   <h3>Personal dentro del área</h3>
   <form class="form-group" action="." method="POST">{% csrf_token %}
-      {% if peronas %}
+      {% if personas %}
       {% for persona in personas %}
         {% if persona.id !=  persona_id%}
 
@@ -18,12 +18,13 @@
 
         {% endif %}
       {% endfor %}
+      <br>
+      <button class="btn btn-primary" type="submit" name="button">Guardar</button>
       {% else %}
         <h3>No hay personal que gestionar</h3>
       {% endif %}
 
-      <br>
-      <button class="btn btn-primary" type="submit" name="button">Guardar</button>
+
   </form>
 </div>
 

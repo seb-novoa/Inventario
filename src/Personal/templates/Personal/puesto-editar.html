@@ -1,21 +1,18 @@
-{% extends 'Personal/base.html'%}
-{% block content %}
-
-
-<div class="">
-  <form id="volver" action="{% url "PuestoViewEditar" puesto.id %}" method="post"> {% csrf_token %}
-    {{ form.Puesto }}
-    {{ form.errors}}
-    <button name="btn-guardar" class="btn btn-secondary"> Guardar </button>
-    <button name="btn-cancelar" class="btn btn-danger"> Cancelar </button>
-  </form>
-</div>
-
-
-
-
-
-
-
-
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="">
+      <form id="volver" action="{% url "PuestoViewEditar" puesto.id %}" method="post"> {% csrf_token %}
+        {{ form.Puesto }}
+        {{ form.errors}}
+        <button name="btn-guardar" class="btn btn-secondary"> Guardar </button>
+        <button name="btn-cancelar" class="btn btn-danger"> Cancelar </button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -170,7 +170,7 @@ class AreaViewEditar(SuccessMessageMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         if 'btn-cancelar' in request.POST:
             return redirect('AreaView')
-        return HttpResponseForbidden()
+        return super(AreaViewEditar, self).post(self, request, *args, **kwargs)
 
 
 
@@ -296,12 +296,6 @@ class PersonaView(View):
         form = PersonaBuscarForm(request.POST)
         context = self.context_contructor('Buscar Personas', form)
         if form.is_valid():
-            if not form.cleaned_data['Area']:
-                nombre = form.cleaned_data['Nombre']
-                obtenido = self.get_persona_by_nombre(nombre)
-
-                context['obtenido'] = obtenido
-
             if form.cleaned_data['Nombre'] and form.cleaned_data['Area']:
                 nombre = form.cleaned_data['Nombre']
                 area   = form.cleaned_data['Area']
@@ -309,6 +303,20 @@ class PersonaView(View):
                 print(obtenido)
 
                 context['obtenido'] = obtenido
+            if not form.cleaned_data['Area']:
+                nombre = form.cleaned_data['Nombre']
+                obtenido = self.get_persona_by_nombre(nombre)
+
+                context['obtenido'] = obtenido
+
+            if not form.cleaned_data['Nombre']:
+                area = form.cleaned_data['Area']
+                obtenido = area.personas_set.all()
+                context['personal'] = obtenido
+                context['area'] = area
+
+
+
         return render(request, 'Personal/persona.html', context)
 
 class PersonaViewDetail(PersonaView):

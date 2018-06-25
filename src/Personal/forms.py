@@ -104,12 +104,7 @@ class PersonaInputForm(forms.Form):
 
 
 class PersonaEditarForm(forms.models.ModelForm):
-
-
-
     def __init__(self, *args, **kwargs):
-        print(args)
-        print(kwargs['instance'].nombre_completo())
         super(PersonaEditarForm, self).__init__(*args, **kwargs)
         self.initial['Nombre'] = kwargs['instance'].nombre_completo()
 
