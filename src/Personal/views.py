@@ -400,11 +400,16 @@ class PersonaViewEditarDelete(SuccessMessageMixin, DeleteView):
         persona = get_object_or_404(Personas, id = pk)
         gestionados = persona.personas_set.all()
         context = {
-            'title' : 'ESTE TITULO',
+            'title' : 'Eliminar persona',
             'persona' : persona,
             'gestionados' : gestionados,
             }
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        if 'btn-cancelar' in request.POST:
+            return redirect('PersonaViewEditar')
+        return super(PersonaViewEditarDelete, self).post(self, request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
