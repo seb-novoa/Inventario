@@ -10,3 +10,6 @@ class Clase(models.Model):
     def __str__(self):
         clase = self.clase[0].upper() + self.clase[1:]
         return clase
+
+class Software(models.Model):
+    software    =   models.CharField(max_length = 30,   unique=True)
