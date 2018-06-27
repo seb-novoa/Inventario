@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1>Clase de equipos</h1>
+<div class="form-control">
+  <h3>Agregar una clase</h3>
+  <form class="form-group" action="." method="post">{%  csrf_token %}
+    <div class="{{fc}}">
+      {{form.as_p}}
+    </div>
+    <button class="btn btn-primary" type="submit" name="button">Guardar</button>
+  </form>
+</div> <!--Formulario para agregar-->
+
+{% if messages %}
+  <ul class="messages" id="Mensajes">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+{% endif %}
+
+{% if clases %}
+
+<br>
+<h5>Buscar clase</h5>
+<input id="buscar" type="text" class="form-control" placeholder="buscar..">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Lista de clases</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="myTable">
+    <form class="" action="" method="post">
+      {% for clase in clases %}
+      <tr>
+        <th>{{clase}}</th>
+        <th><button class="btn btn-secondary" type="button" name="button">Editar</button></th>
+        <th><button class="btn btn-danger" type="button" name="button">Eliminar</button></th>
+
+      </tr>
+      {% endfor %}
+    </form> <!--formulario editar eliminar-->
+  </tbody>
+</table>
+{% else %}
+
+<h5>No hay clases registradas </h5>
+
+{% endif %}
+
+{% block script %}
+  <script src="{% static "js/buscar.js"%}"></script>
+{% endblock %}
+
+{% endblock %}
