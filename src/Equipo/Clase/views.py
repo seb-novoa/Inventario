@@ -33,7 +33,7 @@ class ClaseView(View):
                 new_clase = form.cleaned_data['clase']
                 clase = Clase.objects.create(clase = new_clase)
                 context['form'] = ClaseCreateForm()
-                messages.success(request, 'Se agrego la clase')
+                messages.success(request, 'Se agrego la clase', extra_tags='alert alert-success')
 
         return render(request, self.template_name , context)
 
@@ -52,11 +52,24 @@ class UpdateClase(ClaseView):
 
         form = ClaseUpdateForm(request.POST)
         context = self.context_data(form)
+        instance = get_object_or_404(Clase, id = pk)
         if form.is_valid():
-            instance = get_object_or_404(Clase, id = pk)
             instance.clase = form.cleaned_data['clase']
             instance.save()
 
-            messages.success(request, 'La clase ha sido modificada')
-            return redirect('ClaseView')
-        return render(request, self.template_name, context)
+            messages.success(request, 'La clase ha sido modificada', extra_tags='alert alert-success')
+        else:
+            messages.error(request, 'La clase ya se encuentra registrada', extra_tags ='alert alert-danger' )
+
+        context['clase_id'] = instance.id
+        return redirect('ClaseView')
+        #return render(request, self.template_name, context)
+
+class DeleteClase(ClaseView):
+    def post(self, request, pk):
+        if 'ic-request' in request.POST:
+            messages.success(request, 'La clase se elimino', extra_tags = 'alert alert-success')
+            instance = get_object_or_404(Clase, id = pk)
+            instance.delete()
+
+        return redirect('ClaseView')

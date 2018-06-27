@@ -14,12 +14,17 @@
   </form>
 </div> <!--Formulario para agregar-->
 
+<br>
+
 {% if messages %}
-  <ul class="messages" id="Mensajes">
+
+  <div class="messages alert-dismissible" id="Mensajes">
       {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
       {% endfor %}
-  </ul>
+  </div><!--Mensajes-->
+
 {% endif %}
 
 {% if clases %}
@@ -40,10 +45,16 @@
     <tbody id="myTable">
 
       {% for class in clases %}
-      <tr>
-        <th id="{{class.id}}">{{class}}</th>
-        <th><button class="btn btn-secondary" ic-target="#{{class.id}}" ic-get-from="{% url "UpdateClase" class.id %}"  name="btn-">Editar</button></th>
-        <th><button class="btn btn-danger" type="button" name="button">Eliminar</button></th>
+      <tr >
+        <td id="{{class.id}}">{{class}}</td>
+        <td><button class="btn btn-secondary" ic-target="#{{class.id}}" ic-get-from="{% url "UpdateClase" class.id %}"  name="btn-">Editar</button></td>
+
+        <td ic-confirm ='¿Eliminar la clase {{class}}?'>
+          <button class="btn btn-danger" type="button" name="button" ic-delete-from="{% url "DeleteClase" class.id %}" ic-target="#myTable" ic-select-from-response="#myTable">
+            Eliminar
+            <i class="ic-indicator fa fa-spinner fa-spin" style="display: none"></i>
+          </button>
+        </td>
 
       </tr>
       {% endfor %}
