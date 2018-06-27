@@ -10,7 +10,7 @@
     <div class="{{fc}}">
       {{form.as_p}}
     </div>
-    <button class="btn btn-primary" type="submit" name="button">Guardar</button>
+    <button class="btn btn-primary" type="submit" name="btn-guardar">Guardar</button>
   </form>
 </div> <!--Formulario para agregar-->
 
@@ -28,27 +28,30 @@
 <h5>Buscar clase</h5>
 <input id="buscar" type="text" class="form-control" placeholder="buscar..">
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Lista de clases</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="myTable">
-    <form class="" action="" method="post">
-      {% for clase in clases %}
+<form class="" action="." method="post">{% csrf_token %}
+  <table class="table">
+    <thead>
       <tr>
-        <th>{{clase}}</th>
-        <th><button class="btn btn-secondary" type="button" name="button">Editar</button></th>
+        <th>Lista de clases</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+
+      {% for class in clases %}
+      <tr>
+        <th id="{{class.id}}">{{class}}</th>
+        <th><button class="btn btn-secondary" ic-target="#{{class.id}}" ic-get-from="{% url "UpdateClase" class.id %}"  name="btn-">Editar</button></th>
         <th><button class="btn btn-danger" type="button" name="button">Eliminar</button></th>
 
       </tr>
       {% endfor %}
-    </form> <!--formulario editar eliminar-->
-  </tbody>
-</table>
+
+    </tbody>
+  </table>
+</form> <!--formulario editar eliminar-->
+
 {% else %}
 
 <h5>No hay clases registradas </h5>

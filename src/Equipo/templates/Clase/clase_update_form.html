@@ -1,0 +1,8 @@
+<div class="">
+  <form action="{% url "UpdateClase" clase_id %}"method="post">{% csrf_token %}
+      {{ form.clase }}
+      <input type="submit" value="Update" class="btn btn-primary" />
+      <button type="submit" name="btn-cancelar" class="btn btn-danger">Cancelar</button>
+  </form>
+
+</div>
