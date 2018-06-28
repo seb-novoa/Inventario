@@ -13,3 +13,11 @@ class Clase(models.Model):
 
 class Software(models.Model):
     software    =   models.CharField(max_length = 30,   unique=True)
+
+    def save(self, *args, **kwargs):
+        self.software = self.software.lower()
+        super(Software, self).save(*args, **kwargs)
+
+    def __str__(self):
+        software = self.software[0].upper() + self.software[1:]
+        return software

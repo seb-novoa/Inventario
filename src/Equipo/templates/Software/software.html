@@ -23,6 +23,34 @@
 {% endif %}
 
 {% if programas %}
+
+<br>
+<h5>Buscar software</h5>
+<input id="buscar" type="text" class="form-control" placeholder="buscar..">
+
+<form class="" action="." method="post">{% csrf_token %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Lista de software</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+
+      {% for programa in programas %}
+      <tr >
+        <td>{{programa}}</td>
+        <td><button class="btn btn-secondary" type="button" name="button">Editar</button></td>
+        <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>    
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</form> <!--formulario editar eliminar-->
+
 {% else %}
 
 <h5>No hay software registrados.</h5>
