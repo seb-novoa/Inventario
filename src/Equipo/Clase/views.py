@@ -34,6 +34,7 @@ class ClaseView(View):
                 clase = Clase.objects.create(clase = new_clase)
                 context['form'] = ClaseCreateForm()
                 messages.success(request, 'Se agrego la clase', extra_tags='alert alert-success')
+                return redirect('ClaseView')
 
         return render(request, self.template_name , context)
 
@@ -59,7 +60,8 @@ class UpdateClase(ClaseView):
 
             messages.success(request, 'La clase ha sido modificada', extra_tags='alert alert-success')
         else:
-            messages.error(request, 'La clase ya se encuentra registrada', extra_tags ='alert alert-danger' )
+            clase = get_object_or_404(Clase, clase = form.cleaned_data['clase'])
+            messages.error(request, 'La clase {0} ya se encuentra registrada'.format(clase), extra_tags ='alert alert-danger' )
 
         context['clase_id'] = instance.id
         return redirect('ClaseView')
