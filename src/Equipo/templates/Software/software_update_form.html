@@ -1,0 +1,9 @@
+<div class="">
+  <form action="{% url "UpdateSoftware" sw_id %}"method="post">{% csrf_token %}
+      {{ form.software }}
+      {{  form.errors }}
+      <input type="submit" value="Update" class="btn btn-primary" />
+      <button type="submit" name="btn-cancelar" class="btn btn-danger">Cancelar</button>
+  </form>
+
+</div>

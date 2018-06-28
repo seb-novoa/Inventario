@@ -41,9 +41,9 @@
 
       {% for programa in programas %}
       <tr >
-        <td>{{programa}}</td>
-        <td><button class="btn btn-secondary" type="button" name="button">Editar</button></td>
-        <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>    
+        <td id="{{programa.id}}">{{programa}}</td>
+        <td><button class="btn btn-secondary" ic-target = "#{{programa.id}}" ic-get-from = "{% url "UpdateSoftware" programa.id %}">Editar</button></td>
+        <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>
       </tr>
       {% endfor %}
 

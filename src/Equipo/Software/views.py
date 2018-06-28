@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
 
@@ -33,3 +33,33 @@ class SoftwareView(View):
             messages.success(request, 'El software ha sido agregado', extra_tags = 'alert alert-success')
 
         return render(request, self.template_name, context)
+
+class UpdateSoftware(SoftwareView):
+    template_name = 'Software/software_update_form.html'
+
+    def get(self, request, pk):
+        instance    =   get_object_or_404(Software, id = pk)
+        form        =   SoftwareCreateForm(instance = instance)
+
+        context     =   self.context_data(form)
+        context['sw_id']    =   instance.id
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        if 'btn-cancelar' in request.POST:
+            return redirect('SoftwareView')
+
+        form    =   SoftwareCreateForm(request.POST)
+        context =   self.context_data(form)
+        instance=   get_object_or_404(Software, id = pk)
+
+        if form.is_valid():
+            instance.software   =   form.cleaned_data['software']
+            instance.save()
+            messages.success(request, 'El software ha sido modificada', extra_tags='alert alert-success')
+
+        else:
+            programa = get_object_or_404(Software, software = form.cleaned_data['software'].lower())
+            messages.error(request, 'El software {0} ya se encuentra registrado'.format(programa), extra_tags='alert alert-danger')
+
+        return redirect('SoftwareView')
