@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content%}
+
+<h1>Hardware</h1>
+
+
+{% if programas %}
+
+<br>
+<h5>Buscar Hardware </h5>
+<input id="buscar" type="text" class="form-control" placeholder="buscar..">
+
+<form class="" action="." method="post">{% csrf_token %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Lista de clases</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+
+      {% for class in clases %}
+      <tr >
+
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</form> <!--formulario editar eliminar-->
+
+{% else %}
+
+<h5>No hay hardware registrados</h5>
+<a class="btn btn-primary" href="{% url "CreateHardware" %}">Registrar hardware</a>
+{% endif %}
+
+
+{% if messages %}
+
+  <div class="messages alert-dismissible" id="Mensajes">
+      {% for message in messages %}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+      {% endfor %}
+  </div><!--Mensajes-->
+
+{% endif %}
+
+{% endblock %}
