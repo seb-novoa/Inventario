@@ -29,7 +29,8 @@ class Hardware(models.Model):
 
     def save(self, *args, **kwargs):
         self.hardware = self.hardware.lower()
-        self.descripcion = self.descripcion.lower()
+        if self.descripcion:
+            self.descripcion = self.descripcion.lower()
         super(Hardware, self).save(*args, **kwargs)
 
     def __str__(self):

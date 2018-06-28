@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content%}
 
 <h1>Hardware</h1>
@@ -11,20 +13,46 @@
 <h5>Buscar Hardware </h5>
 <input id="buscar" type="text" class="form-control" placeholder="buscar..">
 
+<div class="text-right">
+  <br>
+  <a class="btn btn-primary" href="{% url "CreateHardware" %}">Registrar hardware</a>
+  <br>
+</div>
+
+{% if messages %}
+
+  <div class="messages alert-dismissible" id="Mensajes">
+      {% for message in messages %}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+      {% endfor %}
+  </div><!--Mensajes-->
+
+{% endif %}
+
+
+
 <form class="" action="." method="post">{% csrf_token %}
+  <br>
   <table class="table">
     <thead>
       <tr>
-        <th>Lista de clases</th>
+        <th>Hardware</th>
+        <th>Descripción</th>
+        <th>Clase</th>
         <th></th>
         <th></th>
       </tr>
     </thead>
     <tbody id="myTable">
 
-      {% for class in clases %}
+      {% for programa in programas %}
       <tr >
-
+        <td>{{programa}}</td>
+        <td>{% if programa.descripcion %}{{programa.descripcion}}{% endif %}</td>
+        <td>{% for clase in programa.clases.all%} {{clase}} -{% endfor %}</td>
+        <td><button class="btn btn-secondary" type="button" name="button">Editar</button></td>
+        <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>
       </tr>
       {% endfor %}
 
@@ -39,15 +67,12 @@
 {% endif %}
 
 
-{% if messages %}
 
-  <div class="messages alert-dismissible" id="Mensajes">
-      {% for message in messages %}
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
-      {% endfor %}
-  </div><!--Mensajes-->
 
-{% endif %}
+{% endblock %}
 
+{% block script %}
+<script src="{% static "js/buscar.js"%}">
+
+</script>
 {% endblock %}
