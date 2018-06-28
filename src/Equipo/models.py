@@ -21,3 +21,17 @@ class Software(models.Model):
     def __str__(self):
         software = self.software[0].upper() + self.software[1:]
         return software
+
+class Hardware(models.Model):
+    hardware    =   models.CharField(max_length =   30, unique  =   True)
+    descripcion =   models.CharField(max_length =   100,null = True)
+    clases      =   models.ManyToManyField(Clase)
+
+    def save(self, *args, **kwargs):
+        self.hardware = self.hardware.lower()
+        self.descripcion = self.descripcion.lower()
+        super(Hardware, self).save(*args, **kwargs)
+
+    def __str__(self):
+        hardware = self.hardware[0].upper() + self.hardware[1:]
+        return hardware
