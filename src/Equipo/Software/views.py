@@ -23,6 +23,7 @@ class SoftwareView(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
+        print(request.POST)
         form = SoftwareCreateForm(request.POST)
         context = self.context_data(form)
 
@@ -31,7 +32,7 @@ class SoftwareView(View):
             software = Software.objects.create(software = new_software)
             context['form'] = SoftwareCreateForm()
             messages.success(request, 'El software ha sido agregado', extra_tags = 'alert alert-success')
-
+            return redirect('SoftwareView')
         return render(request, self.template_name, context)
 
 class UpdateSoftware(SoftwareView):
@@ -61,5 +62,13 @@ class UpdateSoftware(SoftwareView):
         else:
             programa = get_object_or_404(Software, software = form.cleaned_data['software'].lower())
             messages.error(request, 'El software {0} ya se encuentra registrado'.format(programa), extra_tags='alert alert-danger')
+
+        return redirect('SoftwareView')
+
+class DeleteSoftware(SoftwareView):
+    def post(self, request, pk):
+        if 'ic-request' in request.POST:
+            instance    =   get_object_or_404(Software, id = pk)
+            instance.delete()
 
         return redirect('SoftwareView')

@@ -43,7 +43,12 @@
       <tr >
         <td id="{{programa.id}}">{{programa}}</td>
         <td><button class="btn btn-secondary" ic-target = "#{{programa.id}}" ic-get-from = "{% url "UpdateSoftware" programa.id %}">Editar</button></td>
-        <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>
+        <td ic-confirm="¿Eliminar el software {{programa}}?">
+          <button class="btn btn-danger" ic-delete-from="{% url "DeleteSoftware" programa.id %}" ic-target="#myTable" ic-select-from-response="#myTable">
+            Eliminar
+            <i class="ic-indicator fa fa-spinner fa-spin" style="display: none"></i>
+          </button>
+        </td>
       </tr>
       {% endfor %}
 
