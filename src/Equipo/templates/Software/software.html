@@ -12,6 +12,8 @@
   </form>
 </div> <!--Formulario agregar -->
 
+
+<div class="" id="act">
 {% if messages %}
 
   <div class="messages" id="Mensajes">
@@ -24,37 +26,39 @@
 
 {% if programas %}
 
-<br>
-<h5>Buscar software</h5>
-<input id="buscar" type="text" class="form-control" placeholder="buscar..">
+  <br>
+  <h5>Buscar software</h5>
+  <input id="buscar" type="text" class="form-control" placeholder="buscar..">
 
-<form class="" action="." method="post">{% csrf_token %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Lista de software</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="myTable">
+  <form class="" action="." method="post">{% csrf_token %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Lista de software</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
 
-      {% for programa in programas %}
-      <tr >
-        <td id="{{programa.id}}">{{programa}}</td>
-        <td><button class="btn btn-secondary" ic-target = "#{{programa.id}}" ic-get-from = "{% url "UpdateSoftware" programa.id %}">Editar</button></td>
-        <td ic-confirm="¿Eliminar el software {{programa}}?">
-          <button class="btn btn-danger" ic-delete-from="{% url "DeleteSoftware" programa.id %}" ic-target="#myTable" ic-select-from-response="#myTable">
-            Eliminar
-            <i class="ic-indicator fa fa-spinner fa-spin" style="display: none"></i>
-          </button>
-        </td>
-      </tr>
-      {% endfor %}
+        {% for programa in programas %}
+        <tr >
+          <td id="{{programa.id}}">{{programa}}</td>
+          <td><button class="btn btn-secondary" ic-target = "#{{programa.id}}" ic-get-from = "{% url "UpdateSoftware" programa.id %}">Editar</button></td>
+          <td ic-confirm="¿Eliminar el software {{programa}}?">
+            <button class="btn btn-danger" ic-delete-from="{% url "DeleteSoftware" programa.id %}" ic-target="#act" ic-select-from-response="#act">
+              Eliminar
+              <i class="ic-indicator fa fa-spinner fa-spin" style="display: none"></i>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
 
-    </tbody>
-  </table>
-</form> <!--formulario editar eliminar-->
+      </tbody>
+    </table>
+  </form> <!--formulario editar eliminar-->
+
+</div>
 
 {% else %}
 

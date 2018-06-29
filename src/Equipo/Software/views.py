@@ -70,5 +70,6 @@ class DeleteSoftware(SoftwareView):
         if 'ic-request' in request.POST:
             instance    =   get_object_or_404(Software, id = pk)
             instance.delete()
+            messages.success(request, 'Se elimino el software', extra_tags = 'alert alert-danger')
 
         return redirect('SoftwareView')
