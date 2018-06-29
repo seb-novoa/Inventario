@@ -7,7 +7,7 @@
 <h1>Hardware</h1>
 
 
-{% if programas %}
+{% if hardware %}
 
 <br>
 <h5>Buscar Hardware </h5>
@@ -19,47 +19,56 @@
   <br>
 </div>
 
-{% if messages %}
-  <br>
-  <div class="messages alert-dismissible" id="Mensajes">
-      {% for message in messages %}
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
-      {% endfor %}
-  </div><!--Mensajes-->
 
-{% endif %}
+<div class="" id="act">
+  {% if messages %}
+    <br>
+    <div class="messages alert-dismissible" id="Mensajes">
+        {% for message in messages %}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    </div><!--Mensajes-->
+
+  {% endif %}
 
 
 
-<form class="" action="." method="post">{% csrf_token %}
-  <br>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Hardware</th>
-        <th>Descripción</th>
-        <th>Clase</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="myTable">
+  <form class="" action="." method="post">{% csrf_token %}
+    <br>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Hardware</th>
+          <th>Descripción</th>
+          <th>Clase</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
 
-      {% for programa in programas %}
-      <tr >
-        <td>{{programa}}</td>
-        <td>{% if programa.descripcion %}{{programa.descripcion}}{% endif %}</td>
-        <td>{% for clase in programa.clases.all%} {{clase}} -{% endfor %}</td>
-        <td><a class="btn btn-secondary" href="{% url "UpdateHardware" programa.id %}">Editar</a></td>
-        <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>
+        {% for hw in hardware %}
+        <tr >
+          <td>{{hw}}</td>
+          <td>{% if hw.descripcion %}{{hw.descripcion}}{% endif %}</td>
+          <td>{% for clase in hw.clases.all%} {{clase}} -{% endfor %}</td>
+          <td><a class="btn btn-secondary" href="{% url "UpdateHardware" hw.id %}">Editar</a></td>
 
-      </tr>
-      {% endfor %}
+          <td ic-confirm="¿Eliminar el hardware {{hw}}?">
+            <button class="btn btn-danger" ic-delete-from = "{% url "DeleteHardware" hw.id %}" ic-target ="#act" ic-select-from-response="#act">
+              Eliminar
+            </button>
+          </td>
 
-    </tbody>
-  </table>
-</form> <!--formulario editar eliminar-->
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </form> <!--formulario editar eliminar-->
+</div>
+
 
 {% else %}
 

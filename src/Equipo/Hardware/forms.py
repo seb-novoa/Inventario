@@ -26,4 +26,13 @@ class HardwareCreateForm(forms.ModelForm):
         hw = self.cleaned_data['hardware']
         if Hardware.objects.filter(hardware = hw).exists():
             raise forms.ValidationError('El hardware {0} ya se encuentra registrado'.format(self.cleaned_data['hardware']))
-        return hw    
+        return hw
+
+class HardwareUpdateForm(HardwareCreateForm):
+    def clean_hardware(self):
+        hw = self.cleaned_data['hardware'].lower()
+        if Hardware.objects.filter(hardware = hw).exists():
+            i    =    Hardware.objects.get(id = self.instance.id)
+            if i.hardware    !=  hw :
+                raise forms.ValidationError('El hardware {0} ya se encuentra registrado'.format(self.cleaned_data['hardware']))
+        return hw

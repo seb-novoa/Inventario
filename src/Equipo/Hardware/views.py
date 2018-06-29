@@ -3,7 +3,7 @@ from django.views import View
 from django.contrib import messages
 
 from Equipo.models import Hardware, Clase
-from Equipo.Hardware.forms import HardwareCreateForm
+from Equipo.Hardware.forms import HardwareCreateForm, HardwareUpdateForm
 
 # HardwareView
 # CreateHardware
@@ -17,7 +17,7 @@ class HardwareView(View):
     def context_data(self, form = HardwareCreateForm(), title = None):
         context = {
             'form'  :   form,
-            'programas' :   self.all_hardware(),
+            'hardware' :   self.all_hardware(),
             'title'     :   title
         }
         return context
@@ -53,7 +53,7 @@ class UpdateHardware(CreateHardware):
     title = 'Editar hardware'
     def get(self, request, pk):
         instance    =   get_object_or_404(Hardware, id = pk)
-        context     =   self.context_data(form = HardwareCreateForm(instance = instance), title = self.title)
+        context     =   self.context_data(form = HardwareUpdateForm(instance = instance), title = self.title)
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
@@ -61,7 +61,7 @@ class UpdateHardware(CreateHardware):
             return redirect('HardwareView')
 
         instance    =   get_object_or_404(Hardware, id = pk)
-        form        =   HardwareCreateForm(request.POST or None, instance = instance)
+        form        =   HardwareUpdateForm(request.POST or None, instance = instance)
 
         if form.is_valid():
             form.save()
@@ -70,3 +70,12 @@ class UpdateHardware(CreateHardware):
 
         context     =   self.context_data(form = form, title = self.title)
         return render(request, self.template_name, context)
+
+class DeleteHardware(HardwareView):
+    def post(self, request, pk):
+        if 'ic-request' in request.POST:
+            instance    =   get_object_or_404(Hardware, id = pk)
+            instance.delete()
+            messages.success(request, 'Se elimino el hardware', extra_tags = 'alert alert-danger')
+
+        return redirect('HardwareView')
