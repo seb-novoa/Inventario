@@ -20,7 +20,7 @@
 </div>
 
 {% if messages %}
-
+  <br>
   <div class="messages alert-dismissible" id="Mensajes">
       {% for message in messages %}
       <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -51,8 +51,9 @@
         <td>{{programa}}</td>
         <td>{% if programa.descripcion %}{{programa.descripcion}}{% endif %}</td>
         <td>{% for clase in programa.clases.all%} {{clase}} -{% endfor %}</td>
-        <td><button class="btn btn-secondary" type="button" name="button">Editar</button></td>
+        <td><a class="btn btn-secondary" href="{% url "UpdateHardware" programa.id %}">Editar</a></td>
         <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>
+
       </tr>
       {% endfor %}
 

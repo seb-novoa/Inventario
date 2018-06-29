@@ -11,7 +11,6 @@ class HardwareCreateForm(forms.ModelForm):
                 'class' :   'form-control'
             }),
 
-
             'descripcion'   :   forms.Textarea(attrs={
                 'class' :   'form-control'
             })
@@ -27,4 +26,4 @@ class HardwareCreateForm(forms.ModelForm):
         hw = self.cleaned_data['hardware']
         if Hardware.objects.filter(hardware = hw).exists():
             raise forms.ValidationError('El hardware {0} ya se encuentra registrado'.format(self.cleaned_data['hardware']))
-        return hw
+        return hw    
