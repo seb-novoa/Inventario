@@ -36,3 +36,39 @@ class Hardware(models.Model):
     def __str__(self):
         hardware = self.hardware[0].upper() + self.hardware[1:]
         return hardware
+
+
+class Equipo(models.Model):
+    serie   =   models.CharField(max_length = 30)
+    serieEntel  =   models.CharField(max_length = 30)
+    estado  =   models.BooleanField(default = True)
+    clase   =   models.ForeignKey(Clase, on_delete = models.SET_NULL, null = True)
+    hardware    =   models.ForeignKey(Hardware, on_delete = models.SET_NULL, null = True)
+    software    =   models.ForeignKey(Software, on_delete = models.SET_NULL, null = True)
+
+    def save(self):
+        self.serie  =   self.serie.upper()
+
+        if self.estado:
+            self.estado =   self.estado.upper()
+        if self.serieEntel:
+            self.serieEntel =   self.serieEntel.upper()
+        super(Equipo, self).save()
+
+    def __str__(self):
+        return self.serie
+
+class MAC(models.Model):
+    mac     =   models.CharField(max_length = 17)           # ([0-9A-F]{2}[:-]){5}([0-9A-F]{2})
+    descripcion =   models.CharField(max_length = 30)
+    equipo  =   models.ForeignKey(Equipo, on_delete = models.SET_NULL, null = True)
+
+    def save(self):
+        self.mac = self.mac.upper()
+
+        if self.descripcion:
+            self.descripcion = self.descripcion.lower()
+        super(MAC, self).save()
+
+    def __str__(self):
+        return self.mac
