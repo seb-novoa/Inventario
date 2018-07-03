@@ -39,8 +39,9 @@ class Hardware(models.Model):
 
 
 class Equipo(models.Model):
-    serie   =   models.CharField(max_length = 30)
-    serieEntel  =   models.CharField(max_length = 30)
+    serie   =   models.CharField(max_length = 30, unique = True)
+    serieEntel  =   models.CharField(max_length = 30, null = True, unique = True)
+    serieEnap   =   models.CharField(max_length = 30, null = True, unique = True)
     estado  =   models.BooleanField(default = True)
     clase   =   models.ForeignKey(Clase, on_delete = models.SET_NULL, null = True)
     hardware    =   models.ForeignKey(Hardware, on_delete = models.SET_NULL, null = True)
@@ -49,8 +50,8 @@ class Equipo(models.Model):
     def save(self):
         self.serie  =   self.serie.upper()
 
-        if self.estado:
-            self.estado =   self.estado.upper()
+        if self.serieEnap:
+            self.serieEnap =   self.serieEnap.upper()
         if self.serieEntel:
             self.serieEntel =   self.serieEntel.upper()
         super(Equipo, self).save()

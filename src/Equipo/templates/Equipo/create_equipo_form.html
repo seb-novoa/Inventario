@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
+
+<div class="form-group">
+  <form class="form-control" action="." method="POST">{% csrf_token %}
+    {{form.as_p}}
+    <button class="btn btn-primary" type="submit" name="btn-guardar">Guardar</button>
+  </form>
+
+  <div class="text-right">
+    <br>
+    <form class="" action="." method="post">{% csrf_token %}
+        <button class="btn btn-danger" type="submit" name="btn-cancelar">Cancelar</button>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
