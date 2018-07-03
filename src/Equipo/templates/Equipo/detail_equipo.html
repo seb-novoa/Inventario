@@ -19,7 +19,7 @@
 <div class="form-control">
   <p><strong>Número de serie:</strong> {{equipo}}</p>
   <p><strong>Número de serie de Entel:</strong> {% if equipo.serieEntel%}{{equipo.serieEntel}}{% else %} - {% endif%}</p>
-  <p><strong>Número de serie de Enap:</strong> {% if equipo.serieEnap%}{{equipo.serieEnap}}{% else %} - {% endif%}</p>
+  <p><strong>Número de serie de Enap:</strong>  {% if equipo.serieEnap%}{{equipo.serieEnap}}{% else %} - {% endif%}</p>
 </div>
 
 <br>
@@ -60,10 +60,14 @@
 
 <div class="row">
   <div class="col-6">
-    <h3>Hardware <small>editar</small></h3>
+    <h3>Hardware <small><a class="btn" href="{% url "EquipoHardware" equipo.id %}">editar</a></small></h3>
     <div class="form-control">
-      {% if equipo.hardware_set.all %}
-
+      {% if equipo.hardware.all %}
+      <ul>
+        {% for hardware in equipo.hardware.all %}
+        <li>{{hardware }}</li>
+        {% endfor %}
+      </ul>
       {% else %}
       <h5>No se registran</h5>
       {% endif %}
@@ -71,9 +75,14 @@
   </div>
 
   <div class="col-6">
-    <h3>Software <small>editar</small></h3>
+    <h3>Software <small><a class="btn" href="{% url "EquipoSoftware" equipo.id %}">editar</a></small></h3>
     <div class="form-control">
-      {% if equipo.software_set.all %}
+      {% if equipo.software.all %}
+      <ul>
+        {% for software in equipo.software.all %}
+        <li>{{software}}</li>
+        {% endfor %}
+      </ul>
       {% else %}
       <h5>No se registran</h5>
       {% endif %}

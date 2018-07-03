@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from Equipo.models import Equipo, MAC
-from Equipo.Equipo.forms import EquipoCreateForm, CreateMacForm, UpdateMACForm
+from Equipo.Equipo.forms import EquipoCreateForm, CreateMacForm, UpdateMACForm, EquipoHardwareForm, EquipoSoftwareForm
 
 # CreateEquipo
 
@@ -74,3 +74,41 @@ class EditarMAC(addMAC):
 
         context     =   self.context_data(form = form, title = 'Editar tarjeta de red')
         return render(request, self.template_name, context)
+
+class EquipoHardware(CreateEquipo):
+    def get(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+        context     =   self.context_data(form = EquipoHardwareForm(instance = instance), title = 'Hardware')
+        return render(request, self.template_name, context )
+
+    def post(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+        form        =   EquipoHardwareForm(request.POST or None, instance = instance)
+        if 'btn-cancelar' in request.POST:
+            return redirect(instance)
+        context     =   self.context_data(form = form)
+
+        if form.is_valid():
+            form.save()
+            return redirect(instance)
+
+        return render(request, self.template_name, context )
+
+class EquipoSoftware(CreateEquipo):
+    def get(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+        context     =   self.context_data(form = EquipoSoftwareForm(instance = instance), title = 'Software')
+        return render(request, self.template_name, context )
+
+    def post(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+        form        =   EquipoSoftwareForm(request.POST or None, instance = instance)
+        if 'btn-cancelar' in request.POST:
+            return redirect(instance)
+        context     =   self.context_data(form = form)
+
+        if form.is_valid():
+            form.save()
+            return redirect(instance)
+
+        return render(request, self.template_name, context )

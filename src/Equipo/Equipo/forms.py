@@ -1,7 +1,7 @@
 from django import forms
 import re
 
-from Equipo.models import Equipo, MAC
+from Equipo.models import Equipo, MAC, Hardware
 
 class EquipoCreateForm(forms.ModelForm):
     class Meta:
@@ -74,3 +74,24 @@ class UpdateMACForm(CreateMacForm):
             if i.mac != data:
                 raise forms.ValidationError('La MAC ya esta registrada')
         return data
+
+class EquipoHardwareForm(forms.ModelForm):
+    class Meta:
+        model   =   Equipo
+        fields  =   ('hardware', )
+
+    def __init__(self, *args, **kwargs):
+        super(EquipoHardwareForm, self).__init__(*args, **kwargs)
+        self.fields['hardware'].queryset    =   Hardware.objects.filter(clases = self.instance.clase)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+class EquipoSoftwareForm(forms.ModelForm):
+    class Meta:
+        model   =   Equipo
+        fields  =   ('software', )
+
+    def __init__(self, *args, **kwargs):
+        super(EquipoSoftwareForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

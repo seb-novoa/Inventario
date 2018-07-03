@@ -45,8 +45,8 @@ class Equipo(models.Model):
     serieEnap   =   models.CharField(max_length = 30, null = True, unique = True)
     estado  =   models.BooleanField(default = True)
     clase   =   models.ForeignKey(Clase, on_delete = models.SET_NULL, null = True)
-    hardware    =   models.ForeignKey(Hardware, on_delete = models.SET_NULL, null = True)
-    software    =   models.ForeignKey(Software, on_delete = models.SET_NULL, null = True)
+    hardware    =   models.ManyToManyField(Hardware)
+    software    =   models.ManyToManyField(Software)
 
     def save(self):
         self.serie  =   self.serie.upper()
