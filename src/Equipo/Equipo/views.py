@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
 from Equipo.models import Equipo, MAC
-from Equipo.Equipo.forms import EquipoCreateForm, CreateMacForm, UpdateMACForm, EquipoHardwareForm, EquipoSoftwareForm
+from Equipo.Equipo.forms import EquipoCreateForm, CreateMacForm, UpdateMACForm, EquipoHardwareForm, EquipoSoftwareForm, EquipoUpdateForm
 
 # CreateEquipo
 
@@ -29,6 +29,24 @@ class CreateEquipo(View):
             return redirect(instance)
 
         context     =   self.context_data(form = form)
+        return render(request, self.template_name, context)
+
+class UpdateEquipo(CreateEquipo):
+    def get(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+        context     =   self.context_data(form = EquipoUpdateForm(instance = instance), title = 'Editar Equipo')
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+
+        if 'btn-cancelar' in request.POST:
+            return redirect(instance)
+        form        =   EquipoUpdateForm(request.POST or None, instance = instance)
+        if form.is_valid():
+            form.save()
+            return redirect(instance)
+        context     =   self.context_data(form = form, title = 'Editar equipo')
         return render(request, self.template_name, context)
 
 class DetailEquipo(CreateEquipo):

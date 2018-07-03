@@ -41,6 +41,16 @@ class EquipoCreateForm(forms.ModelForm):
                 raise forms.ValidationError('La serie ya se encuentra registrada')
         return data
 
+class EquipoUpdateForm(EquipoCreateForm):
+    def clean_serie(self):
+        data    =   self.cleaned_data['serie']
+
+        if Equipo.objects.filter(serie = data.upper()).exists():
+            i   =   Equipo.objects.get(id = self.instance.id)
+            if data != i.serie:
+                raise forms.ValidationError('La serie ya se encuentra registrada')
+        return data
+
 class CreateMacForm(forms.ModelForm):
     class Meta:
         model   =   MAC

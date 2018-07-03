@@ -8,7 +8,7 @@
 {% block content%}
 <div class="row">
   <div class="col-8">
-    <h1>Equipo <small>{{equipo.clase}}</small></h1>
+    <h1>Equipo <small>{{equipo.clase}}</small> <small><a class="btn" href="{% url "UpdateEquipo" equipo.id%}">editar</a></small></h1>
   </div>
   <div class="col-4 text-right">
     <h5>{% if equipo.estado%} Disponible {% else %} No disponible {% endif %}</h5>
