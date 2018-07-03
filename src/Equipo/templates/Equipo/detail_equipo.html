@@ -28,7 +28,7 @@
   <h3>Tarjeta de red <small><a href="{% url "addMAC" equipo.id%}" class="btn">agregar</a></small></h3>
   <div class="form-control">
     {% if equipo.mac_set.all %}
-    <table class="table table-striped">
+    <table class="table table-hover">
       <thead>
         <tr>
           <th>Descripción</th>
@@ -40,10 +40,17 @@
       <tbody>
         {% for mac in equipo.mac_set.all %}
         <tr>
-          <td>{{mac.descripcion}}</td>
+          <td>{% if mac.descripcion %}{{mac.descripcion}}{% else %} - {% endif %}</td>
           <td>{{mac}}</td>
           <td><a class="btn btn-secondary" href="{% url "EditarMAC" mac.id%}">Editar</a></td>
-          <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>
+          <td ic-confirm="elimnar">
+            <form class="" action="{% url "DeleteMAC" mac.id %}" method="post">{% csrf_token %}
+              <button type="submit" class="btn btn-danger" type="button" name="button">
+                Eliminar
+              </button>
+            </form>
+
+          </td>
 
         </tr>
         {% endfor %}

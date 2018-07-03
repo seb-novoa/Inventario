@@ -75,6 +75,13 @@ class EditarMAC(addMAC):
         context     =   self.context_data(form = form, title = 'Editar tarjeta de red')
         return render(request, self.template_name, context)
 
+class DeleteMAC(View):
+    def post(self, request, pk):
+        instance    =   get_object_or_404(MAC, id = pk)
+        obj         =   instance.equipo
+        instance.delete()
+        return redirect(obj)
+
 class EquipoHardware(CreateEquipo):
     def get(self, request, pk):
         instance    =   get_object_or_404(Equipo, id = pk)
