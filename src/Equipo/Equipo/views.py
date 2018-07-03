@@ -1,12 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 
-from Equipo.Equipo.forms import EquipoCreateForm
+from Equipo.models import Equipo, MAC
+from Equipo.Equipo.forms import EquipoCreateForm, CreateMacForm, UpdateMACForm
 
 # CreateEquipo
 
 class CreateEquipo(View):
-    template_name   =   'Equipo/create_equipo_form.html'
+    template_name   =   'base_crear.html'
 
     def context_data(self, form = EquipoCreateForm(), title = 'Agregar Equipo'):
         return {
@@ -23,8 +24,53 @@ class CreateEquipo(View):
         #     return redirect()
         form        =   EquipoCreateForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('CreateEquipo')
+            instance    =   form.save()
+            print(instance)
+            return redirect(instance)
 
         context     =   self.context_data(form = form)
+        return render(request, self.template_name, context)
+
+class DetailEquipo(CreateEquipo):
+    template_name   =   'Equipo/detail_equipo.html'
+
+    def get(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+        return render(request, self.template_name, {'equipo'    :   instance})
+
+class addMAC(CreateEquipo):
+    def get(self, request, pk):
+        context     =   self.context_data(form = CreateMacForm(), title = 'Agregar tarjeta de red')
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        instance    =   get_object_or_404(Equipo, id = pk)
+        if 'btn-cancelar' in request.POST:
+            return redirect(instance)
+        form    =   CreateMacForm(request.POST)
+        if form.is_valid():
+            mac =   form.save()
+            mac.equipo  =   instance
+            mac.save()
+            return redirect(instance)
+
+        context =   self.context_data(form = form, title = 'Agregar tarjeta de red')
+        return render(request, self.template_name, context)
+
+class EditarMAC(addMAC):
+    def get(self, request, pk):
+        instance    =   get_object_or_404(MAC, id = pk)
+        context     =   self.context_data(form = UpdateMACForm(instance = instance), title = 'Editar tarjeta de red')
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        instance    =   get_object_or_404(MAC, id = pk)
+        if 'btn-cancelar' in request.POST:
+            return redirect(instance.equipo)
+        form    =   UpdateMACForm(request.POST or None, instance = instance)
+        if form.is_valid():
+            form.save()
+            return redirect(instance.equipo)
+
+        context     =   self.context_data(form = form, title = 'Editar tarjeta de red')
         return render(request, self.template_name, context)

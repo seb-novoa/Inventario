@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class Clase(models.Model):
     clase = models.CharField(max_length = 30, unique = True)
@@ -59,9 +60,12 @@ class Equipo(models.Model):
     def __str__(self):
         return self.serie
 
+    def get_absolute_url(self):
+        return reverse('DetailEquipo', args =  [self.id])
+
 class MAC(models.Model):
-    mac     =   models.CharField(max_length = 17)           # ([0-9A-F]{2}[:-]){5}([0-9A-F]{2})
-    descripcion =   models.CharField(max_length = 30)
+    mac     =   models.CharField(max_length = 17, unique = True)           # ([0-9A-F]{2}[:-]){5}([0-9A-F]{2})
+    descripcion =   models.CharField(max_length = 30, null = True)
     equipo  =   models.ForeignKey(Equipo, on_delete = models.SET_NULL, null = True)
 
     def save(self):

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<div class="row">
+  <div class="col-8">
+    <h1>Equipo <small>{{equipo.clase}}</small></h1>
+  </div>
+  <div class="col-4 text-right">
+    <h5>{% if equipo.estado%} Disponible {% else %} No disponible {% endif %}</h5>
+  </div>
+</div>
+
+
+<div class="form-control">
+  <p><strong>Número de serie:</strong> {{equipo}}</p>
+  <p><strong>Número de serie de Entel:</strong> {% if equipo.serieEntel%}{{equipo.serieEntel}}{% else %} - {% endif%}</p>
+  <p><strong>Número de serie de Enap:</strong> {% if equipo.serieEnap%}{{equipo.serieEnap}}{% else %} - {% endif%}</p>
+</div>
+
+<br>
+
+<div class="">
+  <h3>Tarjeta de red <small><a href="{% url "addMAC" equipo.id%}" class="btn">agregar</a></small></h3>
+  <div class="form-control">
+    {% if equipo.mac_set.all %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>MAC</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mac in equipo.mac_set.all %}
+        <tr>
+          <td>{{mac.descripcion}}</td>
+          <td>{{mac}}</td>
+          <td><a class="btn btn-secondary" href="{% url "EditarMAC" mac.id%}">Editar</a></td>
+          <td><button class="btn btn-danger" type="button" name="button">Eliminar</button></td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h5>No se han registrado</h5>
+    {% endif %}
+  </div>
+
+</div>
+
+<br>
+
+<div class="row">
+  <div class="col-6">
+    <h3>Hardware <small>editar</small></h3>
+    <div class="form-control">
+      {% if equipo.hardware_set.all %}
+
+      {% else %}
+      <h5>No se registran</h5>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-6">
+    <h3>Software <small>editar</small></h3>
+    <div class="form-control">
+      {% if equipo.software_set.all %}
+      {% else %}
+      <h5>No se registran</h5>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
