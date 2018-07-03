@@ -3,6 +3,8 @@ import re
 
 from Equipo.models import Equipo, MAC, Hardware
 
+HELP_TEXT_MULTIPLE = 'Manten persionado "Control" para seleccionar mas de uno'
+
 class EquipoCreateForm(forms.ModelForm):
     class Meta:
         model   =   Equipo
@@ -93,6 +95,7 @@ class EquipoHardwareForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EquipoHardwareForm, self).__init__(*args, **kwargs)
         self.fields['hardware'].queryset    =   Hardware.objects.filter(clases = self.instance.clase)
+        self.fields['hardware'].help_text   =   HELP_TEXT_MULTIPLE
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
@@ -103,5 +106,6 @@ class EquipoSoftwareForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(EquipoSoftwareForm, self).__init__(*args, **kwargs)
+        self.fields['software'].help_text   =   HELP_TEXT_MULTIPLE
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'

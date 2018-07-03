@@ -2,6 +2,8 @@ from django import forms
 
 from Equipo.models import Hardware, Clase
 
+HELP_TEXT_MULTIPLE = 'Manten persionado "Control" para seleccionar mas de uno'
+
 class HardwareCreateForm(forms.ModelForm):
     class Meta:
         model   =   Hardware
@@ -19,6 +21,7 @@ class HardwareCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(HardwareCreateForm, self).__init__(*args, **kwargs)
         self.fields['descripcion'].required = False
+        self.fields['clases'].help_text     =   HELP_TEXT_MULTIPLE
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
