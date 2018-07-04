@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{title}} <small><a class="btn " href="{% url "CreateEquipo" %}">Agregar</a></small></h1>
+<div class="form-control">
+  <form class="" action="." method="POST">{% csrf_token %}
+    <div class="form-group">
+      <div class="row">
+        <div class="col-8">
+          {{form.serie}}
+        </div>
+        <div class="col">
+          {{form.clase}}
+        </div>
+      </div>
+
+    </div>
+
+    {{form.errors}}
+    <div class="row">
+      <div class="text-right col-8">
+
+      </div>
+      <div class="text-right col-4">
+        <button class="btn btn-primary" type="submit" name="button">buscar</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<br>
+{% if clase %}
+{% if clase.equipo_set.all %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Serie</th>
+      <th>Estado</th>
+      <th>Pertenece</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for equipo in clase.equipo_set.all %}
+    <tr {% if not equipo.estado %} class="alert alert-danger" {% endif %}>
+      <td><a href="{% url "DetailEquipo" equipo.id %}">{{equipo}}</a></td>
+      <td >
+        {% if equipo.estado %}Disponible {%else%} No disponible {% endif %}
+      </td>
+      <td></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<h5>No hay equipos registrados</h5>
+{% endif %}
+{% endif %}
+
+{% endblock %}

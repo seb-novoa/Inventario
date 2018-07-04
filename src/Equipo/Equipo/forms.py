@@ -1,7 +1,7 @@
 from django import forms
 import re
 
-from Equipo.models import Equipo, MAC, Hardware
+from Equipo.models import Equipo, MAC, Hardware, Clase
 
 HELP_TEXT_MULTIPLE = 'Manten persionado "Control" para seleccionar mas de uno'
 
@@ -109,3 +109,24 @@ class EquipoSoftwareForm(forms.ModelForm):
         self.fields['software'].help_text   =   HELP_TEXT_MULTIPLE
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+class BuscarEquipoForm(forms.Form):
+    serie   =   forms.CharField(required = False, widget   =   forms.TextInput(attrs   =   {'class'    :   'form-control', 'placeholder'   :   'Buscar'}))
+    clase   =   forms.ModelChoiceField(queryset = Clase.objects.all(), required = False, widget  =   forms.fields.Select(attrs   =   {'class'    :   'form-control'}))
+
+    def serie_exists(self, data):
+        data = data.upper()
+        equipo  =   Equipo.objects.all()
+        patron  =   re.compile('([0-9A-F]{2}[:-]){5}([0-9A-F]{2})')
+
+        if  equipo.filter(serie = data).exists() or  equipo.filter(serieEnap = data).exists() or  equipo.filter(serieEntel = data).exists() or patron.match(data.upper()):
+            return False
+        else:
+            return True
+
+    def clean(self):
+        if not self.cleaned_data['serie'] and not self.cleaned_data['clase']:
+            raise forms.ValidationError('Se debe de ingresar una serie o seleccionar una clase')
+        if self.cleaned_data['clase'] == None:
+            if self.serie_exists(self.cleaned_data['serie']):
+                raise forms.ValidationError('El numero de serie no se encutra')

@@ -1,10 +1,11 @@
 from django.conf.urls import url, include
 
-from Equipo.Equipo.views import CreateEquipo, DetailEquipo, addMAC, EditarMAC, EquipoHardware, EquipoSoftware, DeleteMAC, UpdateEquipo
+from Equipo.Equipo.views import CreateEquipo, DetailEquipo, addMAC, EditarMAC, EquipoHardware, EquipoSoftware, DeleteMAC, UpdateEquipo, BuscarEquipo
 
 urlpatterns = [
 
     #   Equipos
+    url(r'^$', BuscarEquipo.as_view(), name = 'BuscarEquipo'),
     url(r'^nuevo/$', CreateEquipo.as_view(), name = 'CreateEquipo'),
     url(r'^(?P<pk>[0-9]+)/$', DetailEquipo.as_view(), name = 'DetailEquipo'),
     url(r'^(?P<pk>[0-9]+)/editar/$', UpdateEquipo.as_view(), name = 'UpdateEquipo'),
