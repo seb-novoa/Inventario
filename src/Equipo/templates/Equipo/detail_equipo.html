@@ -17,6 +17,9 @@
 
 
 <div class="form-control">
+  {% if equipo.personalequipo_set.all %}
+  <p><strong>Persona:</strong>{% for persona in equipo.personalequipo_set.all %} <a href="{% url "PersonaViewDetail" persona.persona.id%}">{{persona.persona}} </a>{% endfor %}</p>
+  {% endif %}
   <p><strong>Número de serie:</strong> {{equipo}}</p>
   <p><strong>Número de serie de Entel:</strong> {% if equipo.serieEntel%}{{equipo.serieEntel}}{% else %} - {% endif%}</p>
   <p><strong>Número de serie de Enap:</strong>  {% if equipo.serieEnap%}{{equipo.serieEnap}}{% else %} - {% endif%}</p>

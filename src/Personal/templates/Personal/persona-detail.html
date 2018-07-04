@@ -1,24 +1,6 @@
 {% extends 'Personal/base.html' %}
 {% block content %}
 
-<!-- <form class="" action="." method="POST">{% csrf_token %}
-
-  <div class="row">
-    <div class="col-8">
-      {{form.Nombre}}
-    </div>
-    <div class="col-4">
-      {{form.Area}}
-    </div>
-  </div>
-
-  <br>
-  <div class="text-right">
-    <a href="{% url "PersonaViewGuardar" %}" class="btn btn-primary">Crear</a>
-    <button class="btn btn-primary" type="submit" name="button">Buscar</button>
-  </div>
-
-</form> -->
 
 <h1>{{title}}</h1>
 
@@ -50,6 +32,38 @@
     {% endif %}
   </div>
 </div>
+
+<br>
+
+{% if equipos %}
+<div class="">
+  <div class="row">
+    <div class="col">
+      <h2>Equipos</h2>
+    </div>
+    <div class="col">
+      <p>  <strong>equipos: </strong> {{equipos.count}}</p>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Serie</th>
+        <th>Categoria</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for equipo in equipos %}
+    <tr>
+      <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo}}</a></td>
+      <td>{{equipo.equipo.clase}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
 
 {% if persona.Gestor %}
   <h2>Gestiona</h2>

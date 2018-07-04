@@ -17,6 +17,8 @@ from Personal.forms import(
     PersonaInputForm, PersonaEditarForm, PersonaBuscarForm,
 )
 
+from PersonalEquipo.models import PersonalEquipo
+
 class PuestoView(View):
     def all_puestos(self):
         return Puestos.objects.all()
@@ -324,6 +326,7 @@ class PersonaViewDetail(PersonaView):
         persona = get_object_or_404(Personas, id = persona_id)
         context = self.context_contructor('Personal', PersonaBuscarForm())
         context['persona'] = persona
+        context['equipos']  =  PersonalEquipo.objects.filter(persona = persona)
         # if persona.GestorIdentificador:
         #     context['gestor'] = persona.get_gestor_url()
 
