@@ -20,6 +20,8 @@ class Asignar(View):
 
     def post(self, request, pk):
         persona     =   get_object_or_404(Personas, id = pk)
+        if 'btn-cancelar' in request.POST:
+            return redirect('PersonaViewDetail', pk)
         form        =   RelacionForm(request.POST)
 
         if form.is_valid():
