@@ -81,6 +81,14 @@ class Personas(models.Model):
     def __str__(self):
         return '{0} {1} del area {2}'.format(self.Nombre, self.Apellido, self.Area)
 
+    def total_equipos(self):
+        return self.personalequipo_set.all().count() + self.personas_set.filter(personalequipo__estado=True).count()
+
+    def total_equipos_vencidos(self):
+        return self.personalequipo_set.filter(atrasado = True).count() + self.personas_set.filter(personalequipo__atrasado=True).count()
+    # def total_equipos_vencidos(self):
+    #     return self.personalequipo_set.all().count()
+
     def get_absolute_url(self):
         return reverse('PersonaViewGestor', args = [self.id])
 

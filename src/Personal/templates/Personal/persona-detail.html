@@ -45,10 +45,10 @@
       <strong><a href="{% url "Asignar" persona.id%}">Asignar</a></strong>
     </div>
     <div class="col">
-      <p>  <strong>equipos: </strong> {{totalEquipo}}</p>
+      <p>  <strong>equipos: </strong> {{persona.total_equipos}}</p>
     </div>
     <div class="col">
-      <p>  <strong>equipos atrasados: </strong> {{totalAtrasados}}</p>
+      <p>  <strong>equipos atrasados: </strong> {{persona.total_equipos_vencidos}}</p>
     </div>
   </div>
 {% if equipos %}
@@ -62,7 +62,7 @@
     </thead>
     <tbody>
     {% for equipo in equipos %}
-    <tr {% if equipo.atrasados %} class="alert alert-danger"{% endif %}>
+    <tr {% if equipo.alerta %} class="alert alert-danger"{% endif %}>
       <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo}}</a></td>
       <td>{{equipo.equipo.clase}}</td>
       <td>{{equipo.fecha_inicio.date}}</td>
@@ -90,7 +90,7 @@
       <tr>
         <td><a href="{% url 'PersonaViewDetail' personal.id %}">{{personal.Nombre}} {{personal.Apellido}}</a></td>
         <td>{{personal.personalequipo_set.all.count}}</td>
-        <td>{{personal.personalequipo_set.all.count}}</td>
+        
       </tr>
       {% endfor %}
     </tbody>

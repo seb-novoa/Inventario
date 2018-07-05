@@ -10,6 +10,7 @@ from django.views.generic.edit import UpdateView
 
 import re
 
+from PersonalEquipo.models import PersonalEquipo
 from Personal.models import Puestos, Areas, Personas
 from Personal.forms import(
     PuestosInputForm, PuestosInputFormEditar, PuestosInputFormGuardar,
@@ -327,10 +328,16 @@ class PersonaViewDetail(PersonaView):
         context = self.context_contructor('Personal', PersonaBuscarForm())
         context['persona'] = persona
         context['equipos']  =  PersonalEquipo.objects.filter(persona = persona)
-        context['totalEquipo']  =   persona.personalequipo_set.all().count() + PersonalEquipo.objects.filter(persona__GestorIdentificador=persona).count()
-        context['totalAtrasados']  =   persona.personalequipo_set.filter(atrasado = True).count() + PersonalEquipo.objects.filter(persona__GestorIdentificador=persona, atrasado = True).count()
-        # if persona.GestorIdentificador:
-        #     context['gestor'] = persona.get_gestor_url()
+
+        if persona.personalequipo_set.all():
+            equipos =   persona.personalequipo_set.all()
+            for equipo in equipos:
+                equipo.atrasados()
+        if persona.personas_set.filter(personalequipo__estado=True):
+            personas =   persona.personas_set.filter(personalequipo__estado = True).distinct()
+            for persona in personas:
+                for equipo in persona.personalequipo_set.all():
+                    equipo.atrasados()
 
 
         return render (request, 'Personal/persona-detail.html', context)
