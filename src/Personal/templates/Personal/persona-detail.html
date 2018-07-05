@@ -35,29 +35,38 @@
 
 <br>
 
-{% if equipos %}
+
 <div class="">
   <div class="row">
     <div class="col">
-      <h2>Equipos</h2>
+      <h2>Equipos </h2>
     </div>
     <div class="col">
-      <p>  <strong>equipos: </strong> {{equipos.count}}</p>
+      <strong><a href="{% url "Asignar" persona.id%}">Asignar</a></strong>
+    </div>
+    <div class="col">
+      <p>  <strong>equipos: </strong> {{totalEquipo}}</p>
+    </div>
+    <div class="col">
+      <p>  <strong>equipos atrasados: </strong> {{totalAtrasados}}</p>
     </div>
   </div>
-
+{% if equipos %}
   <table class="table">
     <thead>
       <tr>
         <th>Serie</th>
         <th>Categoria</th>
+        <th>Estado</th>
       </tr>
     </thead>
     <tbody>
     {% for equipo in equipos %}
-    <tr>
+    <tr {% if equipo.atrasados %} class="alert alert-danger"{% endif %}>
       <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo}}</a></td>
       <td>{{equipo.equipo.clase}}</td>
+      <td>{{equipo.fecha_inicio.date}}</td>
+      <td>{% if equipo.atrasado%} Vencido {% else %} Activo {% endif %}</td>
     </tr>
     {% endfor %}
     </tbody>
@@ -67,11 +76,27 @@
 
 {% if persona.Gestor %}
   <h2>Gestiona</h2>
-  {% for personal in persona.personas_set.all %}
-  <div class="">
-    <a href="{% url 'PersonaViewDetail' personal.id %}">{{personal.Nombre}}</a>
-  </div>
-  {% endfor %}
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre del personal </th>
+        <th>Cantidad de equipos</th>
+        <th>Cantidad de equipos vencidos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for personal in persona.personas_set.all %}
+      <tr>
+        <td><a href="{% url 'PersonaViewDetail' personal.id %}">{{personal.Nombre}} {{personal.Apellido}}</a></td>
+        <td>{{personal.personalequipo_set.all.count}}</td>
+        <td>{{personal.personalequipo_set.all.count}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
 {% endif %}
 
 

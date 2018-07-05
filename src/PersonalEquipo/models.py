@@ -8,13 +8,17 @@ class PersonalEquipo(models.Model):
     persona     =   models.ForeignKey(Personas, on_delete = models.SET_NULL, null = True)
     equipo      =   models.ForeignKey(Equipo, on_delete = models.SET_NULL, null = True)
     estado      =   models.BooleanField(default = True)
-    fecha_inicio    =   models.DateTimeField(auto_now = True)
+    atrasado    =   models.BooleanField(default = False)
+    fecha_inicio    =   models.DateTimeField(auto_now = False, null = True)
     fecha_termino   =   models.DateTimeField(auto_now = False)
 
     def __str__(self):
         return '{0} - {1}'.format(self.persona, self.equipo)
 
-    def atrasado(self):
+    def atrasados(self):
+        if self.fecha_termino < timezone.now():
+            self.atrasado = True
+            self.save()
         return self.fecha_termino < timezone.now()
 
     def save(self):

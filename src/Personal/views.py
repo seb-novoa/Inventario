@@ -327,6 +327,8 @@ class PersonaViewDetail(PersonaView):
         context = self.context_contructor('Personal', PersonaBuscarForm())
         context['persona'] = persona
         context['equipos']  =  PersonalEquipo.objects.filter(persona = persona)
+        context['totalEquipo']  =   persona.personalequipo_set.all().count() + PersonalEquipo.objects.filter(persona__GestorIdentificador=persona).count()
+        context['totalAtrasados']  =   persona.personalequipo_set.filter(atrasado = True).count() + PersonalEquipo.objects.filter(persona__GestorIdentificador=persona, atrasado = True).count()
         # if persona.GestorIdentificador:
         #     context['gestor'] = persona.get_gestor_url()
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
+from django.utils import timezone
 
 from Personal.models import Personas
 
@@ -27,6 +28,7 @@ class Asignar(View):
         if form.is_valid():
             r       =   form.save()
             r.persona   =   persona
+            r.fecha_inicio  =   timezone.now().date()
             r.save()
             return redirect('PersonaViewDetail', pk)
         context     =   self.context_data(form = form)
