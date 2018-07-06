@@ -23,6 +23,9 @@
   <p><strong>Número de serie:</strong> {{equipo}}</p>
   <p><strong>Número de serie de Entel:</strong> {% if equipo.serieEntel%}{{equipo.serieEntel}}{% else %} - {% endif%}</p>
   <p><strong>Número de serie de Enap:</strong>  {% if equipo.serieEnap%}{{equipo.serieEnap}}{% else %} - {% endif%}</p>
+  {% if equipo.personalequipohistoria_set.all %}
+  <p><a href="{% url "HistorialEquipo" equipo.id %}"><strong>Historia del equipo</strong></a></p>
+  {% endif %}
 </div>
 
 <br>

@@ -1,0 +1,9 @@
+{% extends 'Historial/historial_base.html'%}
+
+{% block head %}
+<th>Persona</th>
+{% endblock%}
+
+{% block body %}
+<td><a href="{% url "PersonaViewDetail" equipo.persona.id%}">{{equipo.persona}}</a></td>
+{% endblock %}

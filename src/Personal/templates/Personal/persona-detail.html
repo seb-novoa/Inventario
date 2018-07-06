@@ -22,6 +22,12 @@
       <strong>Puesto:</strong>
       {{persona.Puesto}}
     </div>
+    {% if persona.personalequipohistoria_set.all %}
+    <div class="col">
+      <strong><a href="{% url "Historial" persona.id%}">Historial</a></strong>
+    </div>
+    {% endif %}
+
     {% if persona.GestorIdentificador %}
     <div class="col-6">
 

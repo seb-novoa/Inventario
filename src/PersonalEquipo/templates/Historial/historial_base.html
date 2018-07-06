@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+{% block content %}
+<h1>{{title}}</h1>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      {% block head %}
+      <th>Persona</th>
+
+      {% endblock %}
+      <th>Rango de fecha</th>
+      <th>Fecha de entrega</th>
+      <th>Hardware</th>
+      <th>Software</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for equipo in equipos %}
+    <tr>
+      {% block body %}
+      {% endblock %}
+      <td>{{equipo.fecha_inicio.date}} al {{equipo.fecha_termino.date}}</td>
+      <td>{{equipo.fecha_entrega.date}}</td>
+      <td>{{equipo.hw}}</td>
+      <td>{{equipo.sw}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
