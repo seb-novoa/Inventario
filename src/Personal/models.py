@@ -37,6 +37,7 @@ class Areas(models.Model):
     def get_absolute_url(self):
         return reverse('AreaViewEditar', args = [self.id])
 
+from django.utils import timezone
 class Personas(models.Model):
     Nombre  =   models.CharField(max_length = 50, unique = False)
     NombreSecundario = models.CharField(max_length = 30, null = True, unique = False)
@@ -85,7 +86,15 @@ class Personas(models.Model):
         return self.personalequipo_set.all().count() + self.personas_set.filter(personalequipo__estado=True).count()
 
     def total_equipos_vencidos(self):
-        return self.personalequipo_set.filter(atrasado = True).count() + self.personas_set.filter(personalequipo__atrasado=True).count()
+        total = 0
+        for date in self.personalequipo_set.values('fecha_termino'):
+            if timezone.now().date() > date.get('fecha_termino').date():
+                total   +=  1
+        for persona in self.personas_set.all():
+            for date in persona.personalequipo_set.values('fecha_termino'):
+                if timezone.now().date() > date.get('fecha_termino').date():
+                    total   +=  1
+        return total
     # def total_equipos_vencidos(self):
     #     return self.personalequipo_set.all().count()
 

@@ -9,10 +9,10 @@
     <div class="col">
       <strong>Nombre: </strong>
       {{persona.Nombre}}
+      {% if persona.NombreSecundario %} {{persona.NombreSecundario}}{% else %} {% endif %}
       {{persona.Apellido}}
       {{persona.ApellidoMaterno}}
-      {{persona.Area}}
-      {{persona.Puesto}}
+
     </div>
     <div class="col-6">
       <strong>Area:</strong>
@@ -57,6 +57,7 @@
       <tr>
         <th>Serie</th>
         <th>Categoria</th>
+        <th>Fecha de entrega</th>
         <th>Estado</th>
       </tr>
     </thead>
@@ -65,8 +66,8 @@
     <tr {% if equipo.alerta %} class="alert alert-danger"{% endif %}>
       <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo}}</a></td>
       <td>{{equipo.equipo.clase}}</td>
-      <td>{{equipo.fecha_inicio.date}}</td>
-      <td>{% if equipo.atrasado%} Vencido {% else %} Activo {% endif %}</td>
+      <td>{{equipo.fecha_termino.date}}</td>
+      <td>{% if equipo.alerta%} Vencido {% else %} Activo {% endif %}</td>
     </tr>
     {% endfor %}
     </tbody>
@@ -90,7 +91,7 @@
       <tr>
         <td><a href="{% url 'PersonaViewDetail' personal.id %}">{{personal.Nombre}} {{personal.Apellido}}</a></td>
         <td>{{personal.personalequipo_set.all.count}}</td>
-        
+        <td>{{personal.total_equipos_vencidos}}</td>
       </tr>
       {% endfor %}
     </tbody>
