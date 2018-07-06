@@ -36,6 +36,8 @@
   <div class="form-context">
     <h1>{{area}}  </h1>
     <strong>Número total de personas registradas del área:</strong>  {{area.personas_set.all.count}}
+
+    <p><strong>Número total de equipos registrados en el área:</strong>  {{equipos}}</p>
     <h5>Personal</h5>
   {% for persona in personal %}
   <div class="">

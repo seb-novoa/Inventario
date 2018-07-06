@@ -317,6 +317,7 @@ class PersonaView(View):
                 obtenido = area.personas_set.all()
                 context['personal'] = obtenido
                 context['area'] = area
+                context['equipos'] = area.personas_set.filter(personalequipo__estado=True).count()
 
 
 

@@ -33,3 +33,6 @@ class Asignar(View):
             return redirect('PersonaViewDetail', pk)
         context     =   self.context_data(form = form)
         return render(request, self.template_name, context)
+
+class Devolver(View):
+    pass
