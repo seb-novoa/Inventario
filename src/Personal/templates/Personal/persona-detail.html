@@ -59,6 +59,7 @@
         <th>Categoria</th>
         <th>Fecha de entrega</th>
         <th>Estado</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -68,6 +69,13 @@
       <td>{{equipo.equipo.clase}}</td>
       <td>{{equipo.fecha_termino.date}}</td>
       <td>{% if equipo.alerta%} Vencido {% else %} Activo {% endif %}</td>
+
+      <td>
+        <form class="" action="{% url "Devolver" equipo.id %}" method="post">{% csrf_token %}
+          <button class="btn btn-info" type="submit" name="button">Devolver</button>
+        </form>
+      </td>
+
     </tr>
     {% endfor %}
     </tbody>

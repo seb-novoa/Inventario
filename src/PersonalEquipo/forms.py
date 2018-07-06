@@ -8,6 +8,9 @@ class RelacionForm(forms.ModelForm):
     class Meta:
         model   =   PersonalEquipo
         fields  =   ( 'equipo', 'fecha_termino', )
+        widgets =   {
+            'fecha_termino' :   forms.fields.TextInput(attrs = {'type' : 'date'})
+        }
 
     def __init__(self, *args, **kwargs):
         super(RelacionForm, self).__init__(*args, **kwargs)
@@ -18,4 +21,3 @@ class RelacionForm(forms.ModelForm):
     def clean(self):
         if self.cleaned_data['fecha_termino'] <   timezone.now():
             raise forms.ValidationError('Fecha invalida')
-        
