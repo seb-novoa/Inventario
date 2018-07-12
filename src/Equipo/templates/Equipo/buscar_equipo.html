@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block headScript %}
+<!--  Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
 
-<h1>{{title}} <small><a class="btn " href="{% url "CreateEquipo" %}">Agregar</a></small></h1>
+{% block content %}
+<button type="button" name="button">
+  <i class="material-icons">
+  error
+  </i>
+
+  <i class="material-icons">
+add_to_queue
+</i>
+</button>
+
+<h1>{{title}} <small><a class="btn " href="{% url "CreateEquipo" %}">  <i class="material-icons">
+add_to_queue
+</i></a></small></h1>
 <div class="form-control">
   <form class="" action="." method="POST">{% csrf_token %}
     <div class="form-group">
@@ -48,7 +64,14 @@
       <td >
         {% if equipo.estado %}Disponible {%else%} No disponible {% endif %}
       </td>
-      <td></td>
+      <td>
+        {% if equipo.personalequipo_set.all%}
+        {% for persona in equipo.personalequipo_set.all %}
+        <a href="{% url "PersonaViewDetail" persona.persona.id%}">{{persona.persona}}</a>
+        {% endfor %}
+        {% else %} -
+        {% endif %}
+      </td>
     </tr>
     {% endfor %}
   </tbody>
