@@ -35,6 +35,9 @@
       <a href="{% url "PersonaViewDetail" persona.GestorIdentificador.id%}">  {{persona.GestorIdentificador.Nombre}} {{persona.GestorIdentificador.Apellido}} </a>
 
     </div>
+    <div class="col-6">
+      <a href="{% url "PersonaViewGestor" persona.id%}">Editar</a>
+    </div>
     {% endif %}
   </div>
 </div>
@@ -90,7 +93,12 @@
 {% endif %}
 
 {% if persona.Gestor %}
-  <h2>Gestiona</h2>
+  <h2>
+    Gestiona
+    <small>
+      <a href="{% url "PersonaViewGestor" persona.id%}">Editar</a>
+    </small>
+  </h2>
 
   <table class="table">
     <thead>

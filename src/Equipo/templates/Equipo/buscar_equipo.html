@@ -6,19 +6,9 @@
 {% endblock %}
 
 {% block content %}
-<button type="button" name="button">
-  <i class="material-icons">
-  error
-  </i>
 
-  <i class="material-icons">
-add_to_queue
-</i>
-</button>
 
-<h1>{{title}} <small><a class="btn " href="{% url "CreateEquipo" %}">  <i class="material-icons">
-add_to_queue
-</i></a></small></h1>
+<h1>{{title}} <small><a class="btn " href="{% url "CreateEquipo" %}">  <i class="material-icons">add_to_queue</i></a></small></h1>
 <div class="form-control">
   <form class="" action="." method="POST">{% csrf_token %}
     <div class="form-group">

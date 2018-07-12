@@ -99,7 +99,7 @@ class Personas(models.Model):
     #     return self.personalequipo_set.all().count()
 
     def get_absolute_url(self):
-        return reverse('PersonaViewGestor', args = [self.id])
+        return reverse('PersonaViewDetail', args = [self.id])
 
     def get_gestor_url(self):
         gestor = self.GestorIdentificador

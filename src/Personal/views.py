@@ -489,7 +489,7 @@ class PersonaViewGestor(PersonaView):
             }
             ids = request.POST.getlist('choices')
             personas = Personas.objects.filter(id__in = ids).update(GestorIdentificador = obj)
-            return redirect('PersonaView')
+            return redirect(obj)
 
         else:
             personas = obj.Area.personas_set.filter(Gestor = True)
@@ -502,7 +502,7 @@ class PersonaViewGestor(PersonaView):
             obj.GestorIdentificador = gestor
             obj.save()
 
-            return redirect('PersonaView')
+            return redirect(obj)
         template = self.template(obj)
 
         return render(request, template, context)
