@@ -2,10 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.utils import timezone
 
+#   Modelos
 from Personal.models import Personas
 from Equipo.models import Equipo
 from PersonalEquipo.models import PersonalEquipo, PersonalEquipoHistoria
 
+#   forms
 from PersonalEquipo.forms import RelacionForm
 
 class Asignar(View):
