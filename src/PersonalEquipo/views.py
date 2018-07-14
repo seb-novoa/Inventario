@@ -3,7 +3,7 @@ from django.views import View
 from django.utils import timezone
 
 #   Modelos
-from Personal.models import Personas
+# from Personal.models import Personas
 from Equipo.models import Equipo
 from PersonalEquipo.models import PersonalEquipo, PersonalEquipoHistoria
 
