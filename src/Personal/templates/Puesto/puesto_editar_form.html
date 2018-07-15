@@ -1,0 +1,6 @@
+<form id="volver" action="{% url "UpdatePuesto" puesto.id %}" method="post"> {% csrf_token %}
+  {{ form.as_p }}
+
+  <button name="btn-guardar" class="btn btn-secondary"> Guardar </button>
+  <button name="btn-cancelar" class="btn btn-danger"> Cancelar </button>
+</form>

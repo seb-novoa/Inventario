@@ -23,7 +23,6 @@ class SoftwareView(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
-        print(request.POST)
         form = SoftwareCreateForm(request.POST)
         context = self.context_data(form)
 

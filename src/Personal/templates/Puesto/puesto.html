@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headScript %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://intercoolerreleases-leaddynocom.netdna-ssl.com/intercooler-1.2.1.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ title }}</h1>
+<div class="form-control">
+  <h3>Agregar Puesto</h3>
+  <form class="form-group" action="." method="POST">{% csrf_token %}
+    {{form.as_p}}
+    <button class="btn btn-primary" type="submit" name="btn-guardar">Guardar</button>
+  </form>
+</div> <!--Formulario agregar -->
+
+<div class="" id="act">
+  {% if messages %}
+  <br>
+    {% for message in messages %}
+    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    {% endfor %}
+
+  {% endif %}
+
+
+    <br>
+
+
+    {% if puestos %}
+      <h3>Buscar un puesto</h3>
+      <input type="text" id="buscar" placeholder="Buscar" class="form-control">
+
+      <form class="" action="." method="POST">{% csrf_token %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                Lista de puestos de trabajo
+              </th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="myTable">
+            {% for puesto in puestos %}
+
+                <tr >
+                  <td id="{{puesto.id}}">{{ puesto}}</td>
+                  <td><button type="submit" class="btn btn-secondary" ic-target = "#{{puesto.id}}" ic-get-from = "{% url "UpdatePuesto" puesto.id %}">Editar</button></td>
+                  <td ic-confirm="¿Eliminar el puesto de trabajo {{puesto}}?">
+                    <button class="btn btn-danger" ic-delete-from="{% url "DeletePuesto" puesto.id %}" ic-target="#act" ic-select-from-response="#act">
+                      Eliminar
+
+                    </button>
+                  </td>
+                </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </form>
+
+    {% else %}
+      <h3>No hay puestos registrados</h3>
+    {% endif %}
+
+</div>
+
+    {% block script %}
+
+      <script src="{% static "js/buscar.js" %}"></script>
+    {% endblock %}
+
+{% endblock %}
