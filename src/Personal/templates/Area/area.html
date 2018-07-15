@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headScript %}
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://intercoolerreleases-leaddynocom.netdna-ssl.com/intercooler-1.2.1.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+  <h1>{{title}}</h1>
+
+  <h3>Buscar un área</h3>
+  <input type="text" id="buscar" placeholder="Buscar.." class="form-control">
+  <br>
+  <div class="text-right">
+    <a class="btn btn-primary pull-right" href="./nueva/">Crear area</a>
+  </div>
+
+<div class="" id="act">
+    {% if messages %}
+      <br>
+      {% for message in messages %}
+      <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+      {% endfor %}
+
+    {% endif %}
+
+    <br>
+{% if areas %}
+    <form class="" action="." method="POST"> {% csrf_token %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Centro de costos</th>
+          <th>Área</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+
+
+          {% for area in areas %}
+          <tr>
+              <div class="">
+                <td>{{area.cdc}}</td>
+                <td>{{area}}</td>
+              </div>
+              <td><a class="btn btn-secondary"  href="{% url "UpdateArea" area.id %}">Editar</a></td>
+              <td ic-confirm="¿Eliminar el área de trabajo {{area}}?">
+                <button class="btn btn-danger" ic-delete-from="{% url "DeleteArea" area.id %}" ic-target="#act" ic-select-from-response="#act">
+                  Eliminar
+
+                </button>
+              </td>
+
+          </tr>
+          {% endfor %}
+
+
+      </tbody>
+    </table>
+</form>
+
+
+  </div>
+{% else %}
+<h5>No hay áreas registradas</h5>
+{% endif %}
+  {% block script %}
+    <script src="{% static "js/buscar.js" %}"></script>
+  {% endblock %}
+{% endblock %}
