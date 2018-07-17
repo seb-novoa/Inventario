@@ -35,4 +35,17 @@ class Persona(models.Model):
     puesto  = models.ForeignKey(Puesto, on_delete = models.SET_NULL, null = True)
 
     Gestor = models.BooleanField(default = False)
-    GestorIdentificador  =   models.ForeignKey('self', null = True)
+    Gestionado  =   models.ForeignKey('self', null = True)
+    GestorIdentificador  =   models.ManyToManyField('self')
+
+    def __save__(self):
+        self.nombre =   self.nombre.lower()
+        self.apellido_paterno   =   self.apellido_paterno.lower()
+        self.apellido_materno   =   self.apellido_materno.lower()
+        super(Persona, self).save()
+
+    def __str__(self):
+        return '{0} {1} del área {2}'.format(self.nombre, self.apellido_paterno, self.area)
+
+    def get_absolute_url(self):
+        return reverse('PersonaDetail', args = [self.id])

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block headScript %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<h1>
+  {{title}}
+  <a href="{% url "UpdatePersona" persona.id %}">
+    <i class="material-icons">
+      create
+    </i>
+  </a>
+</h1>
+
+<div class="row">
+  <div class="form-control">
+    <div class="col">
+      <strong>Nombre: </strong>
+      {{persona.nombre}}
+      {% if persona.NombreSecundario %} {{persona.NombreSecundario}}{% else %} {% endif %}
+      {{persona.apellido_paterno}}
+      {{persona.apellido_materno}}
+
+    </div>
+    <div class="col-6">
+      <strong>Area:</strong>
+      {{persona.area}}
+    </div>
+    <div class="col-6">
+      <strong>Puesto:</strong>
+      {{persona.puesto}}
+    </div>
+    {% if persona.personalequipohistoria_set.all%}
+    <div class="col">
+      <strong><a href="{% url "Historial" persona.id%}">Historial</a></strong>
+    </div>
+    {% endif %}
+
+    {% if persona.GestorIdentificador.all and not persona.Gestor%}
+    {% for gestor in persona.GestorIdentificador.all %}
+    <div class="col-6">
+      <strong>Gestor:</strong>
+      <a href="{% url "PersonaDetail" gestor.id %}">  {{gestor.nombre}} {{gestor.apellido_paterno}} </a>
+
+    </div>
+    {% empty %}
+
+    {% endfor %}
+    <div class="col-6">
+      <a href="{% url "PersonaGestor" persona.id%}">Editar</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<br>
+
+
+<div class="">
+  <div class="row">
+    <div class="col">
+      <h2>
+        Equipos
+        <a href="{% url "Asignar" persona.id%}">
+          <i class="material-icons">
+            add_to_queue
+          </i>
+        </a>
+      </h2>
+    </div>
+    <div class="col">
+      <p>  <strong>Equipos: </strong>{% if persona.total_equipos %} {{persona.total_equipos}} {% else %} 0 {% endif %}</p>
+    </div>
+    <div class="col">
+      <p>  <strong>Equipos atrasados: </strong>{% if persona.total_equipos_vencidos %} {{persona.total_equipos_vencidos}} {% else %} 0 {% endif %}</p>
+    </div>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Serie</th>
+        <th>Categoria</th>
+        <th>Fecha de entrega</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for equipo in equipos %}
+    <tr {% if equipo.alerta %} class="alert alert-danger"{% endif %}>
+      <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo}}</a></td>
+      <td>{{equipo.equipo.clase}}</td>
+      <td>{{equipo.fecha_termino.date}}</td>
+      <td>{% if equipo.alerta%} Vencido {% else %} Activo {% endif %}</td>
+
+      <td>
+        <form class="" action="{% url "Devolver" equipo.id %}" method="post">{% csrf_token %}
+          <button class="btn btn-info" type="submit" name="button">Devolver</button>
+        </form>
+      </td>
+
+    </tr>
+    {% empty %}
+    <tr>
+      <td>No hay equipos relacionados</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% if persona.Gestor %}
+  <h2>
+    Gestiona
+    <small>
+      <a href="{% url "PersonaGestor" persona.id %}">
+        <i class="material-icons">
+          create
+        </i>
+      </a>
+    </small>
+  </h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre del personal </th>
+        <th>Cantidad de equipos</th>
+        <th>Cantidad de equipos vencidos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for personal in persona.GestorIdentificador.all %}
+      <tr>
+        <td><a href="{% url "PersonaDetail" personal.id %}">{{personal.nombre}} {{personal.apellido_paterno}}</a></td>
+        <td>{{personal.personalequipo_set.all.count}}</td>
+        <td>{{personal.total_equipos_vencidos}}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td>No hay personal relacionado</td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+
+{% endif %}
+
+
+
+
+{% endblock %}
