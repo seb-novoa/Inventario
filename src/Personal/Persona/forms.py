@@ -45,19 +45,6 @@ class PersonaGestorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PersonaGestorForm, self).__init__(*args, **kwargs)
-        self.fields['GestorIdentificador'].queryset    =   Persona.objects.filter(area = self.instance.area, Gestor = False)
-        self.fields['GestorIdentificador'].help_text   =   HELP_TEXT_MULTIPLE
+        self.fields['GestorIdentificador'].queryset     =   Persona.objects.filter(area = self.instance.area, Gestor = False)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
-
-class PersonaGestionadoForm(forms.ModelForm):
-    class Meta:
-        model   =   Persona
-        fields  =   ('Gestionado', )
-
-    def __init__(self, *args, **kwargs):
-        super(PersonaGestionadoForm, self).__init__(*args, **kwargs)
-        self.fields['Gestionado'].queryset    =   Persona.objects.filter(area = self.instance.area, Gestor = True)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-            visible.field.widget.attrs['multiple'] = False

@@ -27,7 +27,6 @@ class Area(models.Model):
 
 class Persona(models.Model):
     nombre  =   models.CharField(max_length = 50, unique = False)
-    nombre_secundario   = models.CharField(max_length = 30, null = True, unique = False)
     apellido_paterno    =   models.CharField(max_length = 30, null = True, unique = False)
     apellido_materno    =   models.CharField(max_length = 30, null = True, unique = False)
 
@@ -35,8 +34,7 @@ class Persona(models.Model):
     puesto  = models.ForeignKey(Puesto, on_delete = models.SET_NULL, null = True)
 
     Gestor = models.BooleanField(default = False)
-    Gestionado  =   models.ForeignKey('self', null = True)
-    GestorIdentificador  =   models.ManyToManyField('self')
+    GestorIdentificador  =   models.ForeignKey('self',  on_delete = models.SET_NULL, null = True)
 
     def __save__(self):
         self.nombre =   self.nombre.lower()

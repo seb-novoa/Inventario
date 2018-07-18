@@ -39,16 +39,14 @@
     </div>
     {% endif %}
 
-    {% if persona.GestorIdentificador.all and not persona.Gestor%}
-    {% for gestor in persona.GestorIdentificador.all %}
+    {% if persona.GestorIdentificador and not persona.Gestor %}
+
     <div class="col-6">
       <strong>Gestor:</strong>
-      <a href="{% url "PersonaDetail" gestor.id %}">  {{gestor.nombre}} {{gestor.apellido_paterno}} </a>
+      <a href="{% url "PersonaDetail" persona.GestorIdentificador.id %}">  {{persona.GestorIdentificador.nombre}} {{persona.GestorIdentificador.apellido_paterno}} </a>
 
     </div>
-    {% empty %}
 
-    {% endfor %}
     <div class="col-6">
       <a href="{% url "PersonaGestor" persona.id%}">Editar</a>
     </div>
@@ -125,31 +123,39 @@
       </a>
     </small>
   </h2>
+  <form class="" action="{% url "PersonaGestorDelete" persona.id %}" method="post">{% csrf_token %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre del personal </th>
+          <th>Cantidad de equipos</th>
+          <th>Cantidad de equipos vencidos</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for personal in persona.persona_set.all %}
+        <tr>
+          <td><a href="{% url "PersonaDetail" personal.id %}">{{personal.nombre}} {{personal.apellido_paterno}}</a></td>
+          <td>{{personal.personalequipo_set.all.count}}</td>
+          <td>{{personal.total_equipos_vencidos}}</td>
+          <td>
+            <button type="submit" name="btn-eliminar" class="btn btn-danger" value="{{personal.id}}">
+              <i class="material-icons">
+                delete
+              </i>
+            </button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td>No hay personal relacionado</td>
+        </tr>
+        {% endfor %}
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Nombre del personal </th>
-        <th>Cantidad de equipos</th>
-        <th>Cantidad de equipos vencidos</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for personal in persona.GestorIdentificador.all %}
-      <tr>
-        <td><a href="{% url "PersonaDetail" personal.id %}">{{personal.nombre}} {{personal.apellido_paterno}}</a></td>
-        <td>{{personal.personalequipo_set.all.count}}</td>
-        <td>{{personal.total_equipos_vencidos}}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td>No hay personal relacionado</td>
-      </tr>
-      {% endfor %}
-
-    </tbody>
-  </table>
-
+      </tbody>
+    </table>
+  </form>
 
 {% endif %}
 

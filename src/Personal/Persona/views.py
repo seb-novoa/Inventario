@@ -5,7 +5,7 @@ from django.views import View
 from Personal.models import Persona
 
 #   Formulario
-from Personal.Persona.forms import PersonaForm, UpdatePersonaForm, PersonaGestorForm, PersonaGestionadoForm
+from Personal.Persona.forms import PersonaForm, UpdatePersonaForm, PersonaGestorForm
 
 class PersonaDetail(View):
     template_name   =   'Persona/persona_detail.html'
@@ -81,13 +81,19 @@ class PersonaGestor(View):
         if 'btn-cancelar' in request.POST:
             return redirect(persona)
 
-        if persona.Gestor:
-            form    =   PersonaGestorForm(request.POST, instance = persona)
-        else:
-            form    =   PersonaGestionadoForm(request.POST, instance = persona)
+
+        form    =   PersonaGestorForm(request.POST, instance = persona)
+
 
         if form.is_valid():
-            pass
-            # form.save()
-            # return redirect(persona)
+            persona.persona_set.add(form.cleaned_data['GestorIdentificador'])
+            return redirect(persona)
         return render(request, self.template_name, self.context_data(form = form))
+
+class PersonaGestorDelete(View):
+    def post(self, request, pk):
+        if 'btn-eliminar' in request.POST:
+            gestor  =   get_object_or_404(Persona, pk = pk)
+            persona =   Persona.objects.get(pk = request.POST.get('btn-eliminar'))
+            gestor.persona_set.remove(persona)
+        return redirect(gestor)
