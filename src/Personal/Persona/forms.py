@@ -1,7 +1,7 @@
 from django import forms
 
 #   Modelo
-from Personal.models import Persona
+from Personal.models import Persona, Area
 
 HELP_TEXT_MULTIPLE = 'Manten persionado "Control" para seleccionar mas de uno'
 
@@ -48,3 +48,11 @@ class PersonaGestorForm(forms.ModelForm):
         self.fields['GestorIdentificador'].queryset     =   Persona.objects.filter(area = self.instance.area, Gestor = False)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+class PersonaBuscarForm(forms.Form):
+    nombre = forms.CharField(required = False, widget   =   forms.TextInput(attrs   =   {'class'    :   'form-control', 'placeholder'   :   'Buscar'}))
+    area = forms.ModelChoiceField(queryset = Area.objects.all(), required = False, widget  =   forms.fields.Select(attrs   =   {'class'    :   'form-control'}))
+
+    def clean(self):
+        if not self.cleaned_data['nombre'] and not self.cleaned_data['area']:
+            raise forms.ValidationError('Se debe ingresar el nombres o un area')

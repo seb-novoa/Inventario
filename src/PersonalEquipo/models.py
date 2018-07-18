@@ -2,10 +2,10 @@ from django.db import models
 from django.utils import timezone
 
 from Equipo.models import Equipo
-# from Personal.models import Personas
+from Personal.models import Persona
 
 class PersonalEquipo(models.Model):
-    # persona         =   models.ForeignKey(Personas, on_delete = models.SET_NULL, null = True)
+    persona         =   models.ForeignKey(Persona, on_delete = models.SET_NULL, null = True)
     equipo          =   models.ForeignKey(Equipo, on_delete = models.SET_NULL, null = True)
     estado          =   models.BooleanField(default = False)
     fecha_inicio    =   models.DateTimeField(auto_now = False, null = True)
@@ -33,7 +33,7 @@ class PersonalEquipo(models.Model):
 
 class PersonalEquipoHistoria(models.Model):
     fecha_entrega   =   models.DateTimeField(auto_now = False, null = True)
-    # persona         =   models.ForeignKey(Personas, on_delete = models.SET_NULL, null = True )
+    persona         =   models.ForeignKey(Persona, on_delete = models.SET_NULL, null = True )
     equipo          =   models.ForeignKey(Equipo, on_delete = models.SET_NULL, null = True)
     fecha_inicio    =   models.DateTimeField(auto_now = False )
     fecha_termino   =   models.DateTimeField(auto_now = False )

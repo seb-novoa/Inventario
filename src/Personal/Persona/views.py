@@ -5,7 +5,7 @@ from django.views import View
 from Personal.models import Persona
 
 #   Formulario
-from Personal.Persona.forms import PersonaForm, UpdatePersonaForm, PersonaGestorForm
+from Personal.Persona.forms import PersonaForm, UpdatePersonaForm, PersonaGestorForm, PersonaBuscarForm
 
 class PersonaDetail(View):
     template_name   =   'Persona/persona_detail.html'
@@ -97,3 +97,73 @@ class PersonaGestorDelete(View):
             persona =   Persona.objects.get(pk = request.POST.get('btn-eliminar'))
             gestor.persona_set.remove(persona)
         return redirect(gestor)
+
+class PersonaBuscar(View):
+    template_name   =   'Persona/persona.html'
+
+    def all_persona(self):
+        return Persona.objects.all().order_by('area')
+
+    def context_data(self, form = PersonaBuscarForm()):
+        return {
+            'title' :   'Personal',
+            'form'  :   form
+        }
+
+    def get_persona_by_nombre(self, nombre):
+        personas = self.all_persona()
+        nombre_length = len(nombre.split())
+        if nombre_length == 1:
+            if personas.filter(nombre__startswith = nombre) or personas.filter(apellido_paterno__startswith=nombre):
+                return personas.filter(nombre__startswith = nombre) or personas.filter(apellido_paterno__startswith=nombre)
+        elif nombre_length == 2:
+            if personas.filter(nombre__startswith = nombre[0]) or personas.filter(apellido_paterno__startswith=nombre[1]):
+                return personas.filter(nombre__startswith = nombre[0]) or personas.filter(apellido_paterno__startswith=nombre[1])
+        elif nombre_length >= 3:
+            if personas.filter(nombre__startswith = nombre[0]) or personas.filter(apellido_paterno__startswith=nombre[1]) or  personas.filter(apellido_materno__startswith=nombre[2]):
+                return personas.filter(nombre__startswith = nombre[0]) or personas.filter(apellido_paterno__startswith=nombre[1]) or  personas.filter(apellido_materno__startswith=nombre[2])
+
+    def get_persona_by_nombre_and_area(self, nombre, area ):
+        personas    =   self.all_persona()
+        nombre_length   =   len(nombre.split())
+        if nombre_length == 1:
+            if personas.filter(nombre__startswith = nombre, area = area) or personas.filter(apellido_paterno__startswith=nombre, area = area) :
+                return personas.filter(nombre__startswith = nombre, area = area ) or personas.filter(apellido_paterno__startswith=nombre, area = area)
+        elif nombre_length == 2:
+            if personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) :
+                return personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) 
+        elif nombre_length >= 3:
+            if personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) or  personas.filter(apellido_materno__startswith=nombre[2], area = area) :
+                return personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) or  personas.filter(apellido_materno__startswith=nombre[2], area = area) 
+
+
+    def get(self, request):
+        return render(request, self.template_name, self.context_data())
+
+    def post(self, request):
+        form    =   PersonaBuscarForm(request.POST)
+        context =   self.context_data(form = form)
+
+        if form.is_valid():
+            #   Buscar por nombre y area
+            if form.cleaned_data['nombre'] and form.cleaned_data['area']:
+                nombre = form.cleaned_data['nombre']
+                area   = form.cleaned_data['area']
+                obtenido = self.get_persona_by_nombre_and_area(nombre, area)
+                context['obtenido'] = obtenido
+
+            #   Buscar solo por Nombre
+            if not form.cleaned_data['area']:
+                nombre = form.cleaned_data['nombre']
+                obtenido = self.get_persona_by_nombre(nombre)
+
+                context['obtenido'] = obtenido
+
+            #   Buscar solo por Area
+            if not form.cleaned_data['nombre']:
+                area = form.cleaned_data['area']
+                obtenido = area.persona_set.all()
+                context['personal'] = obtenido
+                context['area'] = area
+                context['equipos'] = area.persona_set.filter(personalequipo__estado=True).count()
+        return render(request, self.template_name, context)

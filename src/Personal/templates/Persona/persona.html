@@ -1,0 +1,70 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<h1>{{title}}<small><a class="btn " href="{% url "CreatePersona" %}">Agregar</a></small></h1>
+
+<div class="form-control">
+  <form class="" action="." method="POST">{% csrf_token %}
+
+    <div class="row">
+      <div class="col-8">
+        {{form.nombre}}
+      </div>
+      <div class="col-4">
+        {{form.area}}
+      </div>
+    </div>
+
+    <br>
+    <div class="text-right">
+      <button class="btn btn-primary" type="submit" name="button">Buscar</button>
+    </div>
+
+  </form>
+</div>
+
+
+{% if messages %}
+
+    {% for message in messages %}
+    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    {% endfor %}
+
+{% endif %}
+
+
+  {% if personal %}
+  <div class="form-context">
+    <h1>{{area}}  </h1>
+    <strong>Número total de personas registradas del área:</strong>  {{area.persona_set.all.count}}
+
+    <p><strong>Número total de equipos registrados en el área:</strong>  {{equipos}}</p>
+    <h5>Personal</h5>
+  {% for persona in personal %}
+  <div class="">
+    <a href="{% url 'PersonaDetail' persona.id %}">
+        {{persona}}
+    </a>
+
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if obtenido %}
+  <br>
+  <h3>Personal</h3>
+    {% for persona in obtenido %}
+    <div class="">
+      <a href="{% url 'PersonaDetail' persona.id %}">
+          {{persona}}
+      </a>
+
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+
+
+{% endblock %}
