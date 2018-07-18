@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.views import View
 
 #   Modelo
@@ -18,7 +19,9 @@ class PersonaDetail(View):
 
     def get(self, request, pk):
         persona =   get_object_or_404(Persona, pk = pk)
-        return render(request, self.template_name, self.context_data(persona = persona))
+        context =   self.context_data(persona = persona)
+        context['equipos']  =   persona.personalequipo_set.all()
+        return render(request, self.template_name, context)
 
 class CreatePersona(View):
     template_name   =   'base_crear.html'
@@ -32,7 +35,10 @@ class CreatePersona(View):
     def get(self, request):
         return render(request, self.template_name, self.context_data())
 
-    def post(self, request):            #   BOTON CANCELAR
+    def post(self, request):
+        if 'btn-cancelar' in request.POST:
+            return redirect('PersonaBuscar')
+
         form    =   PersonaForm(request.POST)
         if form.is_valid():
             persona =   form.save()
@@ -56,6 +62,14 @@ class UpdatePersona(CreatePersona):
             form.save()
             return redirect(persona)
         return redirect(request, self.template_name, self.context_data(form = form))
+
+class DeletePersona(View):
+    def post(self, request, pk):
+        persona =   get_object_or_404(Persona, pk = pk)
+        if 'btn-delete' in request.POST:
+            persona.delete()
+            messages.success(request, 'La persona ha sido eliminada', extra_tags='alert alert-success')
+        return redirect('PersonaBuscar')
 
 class PersonaGestor(View):
     template_name   =   'base_crear.html'
@@ -131,10 +145,10 @@ class PersonaBuscar(View):
                 return personas.filter(nombre__startswith = nombre, area = area ) or personas.filter(apellido_paterno__startswith=nombre, area = area)
         elif nombre_length == 2:
             if personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) :
-                return personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) 
+                return personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area)
         elif nombre_length >= 3:
             if personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) or  personas.filter(apellido_materno__startswith=nombre[2], area = area) :
-                return personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) or  personas.filter(apellido_materno__startswith=nombre[2], area = area) 
+                return personas.filter(nombre__startswith = nombre[0], area = area) or personas.filter(apellido_paterno__startswith=nombre[1], area = area) or  personas.filter(apellido_materno__startswith=nombre[2], area = area)
 
 
     def get(self, request):

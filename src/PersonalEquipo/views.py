@@ -5,6 +5,7 @@ from django.utils import timezone
 #   Modelos
 # from Personal.models import Personas
 from Equipo.models import Equipo
+from Personal.models import Persona
 from PersonalEquipo.models import PersonalEquipo, PersonalEquipoHistoria
 
 #   forms
@@ -24,7 +25,7 @@ class Asignar(View):
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
-        persona     =   get_object_or_404(Personas, id = pk)
+        persona     =   get_object_or_404(Persona, id = pk)
         if 'btn-cancelar' in request.POST:
             return redirect('PersonaViewDetail', pk)
         form        =   RelacionForm(request.POST)
@@ -34,7 +35,7 @@ class Asignar(View):
             r.persona   =   persona
             r.fecha_inicio  =   timezone.now().date()
             r.save()
-            return redirect('PersonaViewDetail', pk)
+            return redirect(persona)
         context     =   self.context_data(form = form)
         return render(request, self.template_name, context)
 
@@ -68,7 +69,7 @@ class Historial(View):
     template_name   =   'Historial/historial_persona.html'
 
     def get(self, request, pk):
-        persona =   get_object_or_404(Personas, id = pk )
+        persona =   get_object_or_404(Persona, id = pk )
         context =   {
             'equipos'   :   persona.personalequipohistoria_set.all().order_by('-fecha_entrega'),
             'title'     :   'Historial de {0}'.format(persona)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 class Puesto(models.Model):
     puesto  =   models.CharField(max_length = 30, unique = True)
@@ -47,3 +48,17 @@ class Persona(models.Model):
 
     def get_absolute_url(self):
         return reverse('PersonaDetail', args = [self.id])
+
+    def total_equipos(self):
+        return self.personalequipo_set.all().count() + self.persona_set.filter(personalequipo__estado=True).count()
+
+    def total_equipos_vencidos(self):
+        total = 0
+        for date in self.personalequipo_set.values('fecha_termino'):
+            if timezone.now().date() > date.get('fecha_termino').date():
+                total   +=  1
+        for persona in self.persona_set.all():
+            for date in persona.personalequipo_set.values('fecha_termino'):
+                if timezone.now().date() > date.get('fecha_termino').date():
+                    total   +=  1
+        return total

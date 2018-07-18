@@ -6,14 +6,29 @@
 {% endblock %}
 
 {% block content %}
-<h1>
-  {{title}}
-  <a href="{% url "UpdatePersona" persona.id %}">
-    <i class="material-icons">
-      create
-    </i>
-  </a>
-</h1>
+<div class="row">
+  <div class="col">
+    <h1>
+      {{title}}
+      <a href="{% url "UpdatePersona" persona.id %}">
+        <i class="material-icons">
+          create
+        </i>
+      </a>
+    </h1>
+  </div>
+  <div class="col text-right">
+    <form class="" action="{% url "DeletePersona" persona.id %}" method="post">{% csrf_token %}
+      <button type="submit" name="btn-delete" class="btn btn-danger" value="{{personal.id}}">
+        <i class="material-icons">
+          delete
+        </i>
+      </button>
+    </form>
+  </div>
+</div>
+
+
 
 <div class="row">
   <div class="form-control">
