@@ -61,10 +61,6 @@
       <a href="{% url "PersonaDetail" persona.GestorIdentificador.id %}">  {{persona.GestorIdentificador.nombre}} {{persona.GestorIdentificador.apellido_paterno}} </a>
 
     </div>
-
-    <div class="col-6">
-      <a href="{% url "PersonaGestor" persona.id%}">Editar</a>
-    </div>
     {% endif %}
   </div>
 </div>
