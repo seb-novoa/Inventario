@@ -35,7 +35,7 @@ class Persona(models.Model):
     puesto  = models.ForeignKey(Puesto, on_delete = models.SET_NULL, null = True)
 
     Gestor = models.BooleanField(default = False)
-    GestorIdentificador  =   models.ForeignKey('self',  on_delete = models.SET_NULL, null = True)
+    GestorIdentificador  =   models.ForeignKey('self',  on_delete = models.SET_NULL, null = True, blank = True)
 
     def __save__(self):
         self.nombre =   self.nombre.lower()

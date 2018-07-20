@@ -27,7 +27,7 @@ class Asignar(View):
     def post(self, request, pk):
         persona     =   get_object_or_404(Persona, id = pk)
         if 'btn-cancelar' in request.POST:
-            return redirect('PersonaViewDetail', pk)
+            return redirect(persona)
         form        =   RelacionForm(request.POST)
 
         if form.is_valid():
@@ -46,7 +46,7 @@ class Devolver(View):
         hw  =   ''
         sw  =   ''
         for hardware in instance.equipo.hardware.all():
-            hw += str(hardware) + ' '
+            hw += str(hardware) + ' ' + str(hardware.descripcion) + ' '
         for software in instance.equipo.software.all():
             sw  +=  str(software) + ' '
 
@@ -63,7 +63,7 @@ class Devolver(View):
         instance.equipo.estado = True
         instance.equipo.save()
         instance.delete()
-        return redirect('PersonaViewDetail', instance.persona.id)
+        return redirect('PersonaDetail', instance.persona.id)
 
 class Historial(View):
     template_name   =   'Historial/historial_persona.html'

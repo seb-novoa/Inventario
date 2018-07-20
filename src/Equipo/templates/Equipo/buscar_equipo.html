@@ -57,7 +57,7 @@
       <td>
         {% if equipo.personalequipo_set.all%}
         {% for persona in equipo.personalequipo_set.all %}
-        <a href="{% url "PersonaViewDetail" persona.persona.id%}">{{persona.persona}}</a>
+        <a href="{% url "PersonaDetail" persona.persona.id%}">{{persona.persona}}</a>
         {% endfor %}
         {% else %} -
         {% endif %}

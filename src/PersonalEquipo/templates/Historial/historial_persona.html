@@ -2,8 +2,10 @@
 
 {% block head %}
 <th>Equipo</th>
+<th>clase</th>
 {% endblock%}
 
 {% block body %}
 <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo}}</a></td>
+<td>{{equipo.equipo.clase}}</td>
 {% endblock %}
