@@ -8,12 +8,12 @@ HELP_TEXT_MULTIPLE = 'Manten persionado "Control" para seleccionar mas de uno'
 class EquipoCreateForm(forms.ModelForm):
     class Meta:
         model   =   Equipo
-        fields  =   ('serie', 'serieEntel', 'serieEnap', 'clase')
+        fields  =   ('serie', 'serieProveedor', 'serieEnap', 'clase')
 
 
     def __init__(self, *args, **kwargs):
         super(EquipoCreateForm, self).__init__(*args, **kwargs)
-        self.fields['serieEntel'].required = False
+        self.fields['serieProveedor'].required = False
         self.fields['serieEnap'].required = False
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
@@ -25,12 +25,12 @@ class EquipoCreateForm(forms.ModelForm):
             raise forms.ValidationError('La serie ya se encuentra registrada')
         return data
 
-    def clean_serieEntel(self):
-        data    =   self.cleaned_data.get('serieEntel')
-        if self.cleaned_data.get('serieEntel'):
-            data    =   self.cleaned_data['serieEntel']
+    def clean_serieProveedor(self):
+        data    =   self.cleaned_data.get('serieProveedor')
+        if self.cleaned_data.get('serieProveedor'):
+            data    =   self.cleaned_data['serieProveedor']
 
-            if Equipo.objects.filter(serieEntel = data.upper()).exists():
+            if Equipo.objects.filter(serieProveedor = data.upper()).exists():
                 raise forms.ValidationError('La serie ya se encuentra registrada')
         return data
 
@@ -119,7 +119,7 @@ class BuscarEquipoForm(forms.Form):
         equipo  =   Equipo.objects.all()
         patron  =   re.compile('([0-9A-F]{2}[:-]){5}([0-9A-F]{2})')
 
-        if  equipo.filter(serie = data).exists() or  equipo.filter(serieEnap = data).exists() or  equipo.filter(serieEntel = data).exists() or patron.match(data.upper()):
+        if  equipo.filter(serie = data).exists() or  equipo.filter(serieEnap = data).exists() or  equipo.filter(serieProveedor = data).exists() or patron.match(data.upper()):
             return False
         else:
             return True
@@ -127,6 +127,6 @@ class BuscarEquipoForm(forms.Form):
     def clean(self):
         if not self.cleaned_data['serie'] and not self.cleaned_data['clase']:
             raise forms.ValidationError('Se debe de ingresar una serie o seleccionar una clase')
-        if self.cleaned_data['clase'] == None:
+        if self.cleaned_data['serie']:
             if self.serie_exists(self.cleaned_data['serie']):
-                raise forms.ValidationError('El numero de serie no se encutra')
+                raise forms.ValidationError('La serie no se encuentra registrado')

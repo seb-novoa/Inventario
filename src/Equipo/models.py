@@ -41,24 +41,27 @@ class Hardware(models.Model):
 
 class Equipo(models.Model):
     serie   =   models.CharField(max_length = 30, unique = True)
-    serieEntel  =   models.CharField(max_length = 30, null = True, unique = True)
-    serieEnap   =   models.CharField(max_length = 30, null = True, unique = True)
+    serieProveedor  =   models.CharField(max_length = 30, null = True, unique = True, blank = True)
+    serieEnap   =   models.CharField(max_length = 30, null = True, unique = True, blank = True)
     estado  =   models.BooleanField(default = True)
     clase   =   models.ForeignKey(Clase, on_delete = models.SET_NULL, null = True)
-    hardware    =   models.ManyToManyField(Hardware)
-    software    =   models.ManyToManyField(Software)
+    hardware    =   models.ManyToManyField(Hardware, blank = True)
+    software    =   models.ManyToManyField(Software, blank = True)
+
+    class Meta:
+        ordering = ['-estado']
 
     def save(self):
         self.serie  =   self.serie.upper()
 
         if self.serieEnap:
             self.serieEnap =   self.serieEnap.upper()
-        if self.serieEntel:
-            self.serieEntel =   self.serieEntel.upper()
+        if self.serieProveedor:
+            self.serieProveedor =   self.serieProveedor.upper()
         super(Equipo, self).save()
 
     def __str__(self):
-        return self.serie
+        return '{0} {1}'.format(self.serie, self.clase)
 
     def get_absolute_url(self):
         return reverse('DetailEquipo', args =  [self.id])

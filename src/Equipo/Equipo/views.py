@@ -25,7 +25,6 @@ class CreateEquipo(View):
         form        =   EquipoCreateForm(request.POST)
         if form.is_valid():
             instance    =   form.save()
-            print(instance)
             return redirect(instance)
 
         context     =   self.context_data(form = form)
@@ -42,8 +41,8 @@ class BuscarEquipo(CreateEquipo):
             return equipos.get(serie = equipo)
         elif equipos.filter(serieEnap = equipo):
             return equipos.get(serieEnap = equipo)
-        elif equipos.filter(serieEntel = equipo):
-            return equipos.get(serieEntel = equipo)
+        elif equipos.filter(serieProveedor = equipo):
+            return equipos.get(serieProveedor = equipo)
         else:
             e   =   MAC.objects.get(mac = equipo)
             return e.equipo

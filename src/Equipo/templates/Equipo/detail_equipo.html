@@ -20,8 +20,8 @@
   {% if equipo.personalequipo_set.all %}
   <p><strong>Persona:</strong>{% for persona in equipo.personalequipo_set.all %} <a href="{% url "PersonaDetail" persona.persona.id%}">{{persona.persona}} </a>{% endfor %}</p>
   {% endif %}
-  <p><strong>Número de serie:</strong> {{equipo}}</p>
-  <p><strong>Número de serie de Entel:</strong> {% if equipo.serieEntel%}{{equipo.serieEntel}}{% else %} - {% endif%}</p>
+  <p><strong>Número de serie:</strong> {{equipo.serie}}</p>
+  <p><strong>Número de serie del proveedor:</strong> {% if equipo.serieProveedor%}{{equipo.serieProveedor}}{% else %} - {% endif%}</p>
   <p><strong>Número de serie de Enap:</strong>  {% if equipo.serieEnap%}{{equipo.serieEnap}}{% else %} - {% endif%}</p>
   {% if equipo.personalequipohistoria_set.all %}
   <p><a href="{% url "HistorialEquipo" equipo.id %}"><strong>Historia del equipo</strong></a></p>
@@ -67,7 +67,7 @@
     {% endif %}
   </div>
 
-</div>
+</div><!--Mac-->
 
 <br>
 
@@ -78,14 +78,14 @@
       {% if equipo.hardware.all %}
       <ul>
         {% for hardware in equipo.hardware.all %}
-        <li>{{hardware }}</li>
+        <li>{{hardware}} {{hardware.descripcion}}</li>
         {% endfor %}
       </ul>
       {% else %}
       <h5>No se registran</h5>
       {% endif %}
     </div>
-  </div>
+  </div><!--Hardware-->
 
   <div class="col-6">
     <h3>Software <small><a class="btn" href="{% url "EquipoSoftware" equipo.id %}">editar</a></small></h3>

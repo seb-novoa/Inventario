@@ -22,8 +22,20 @@
       </div>
 
     </div>
-
-    {{form.errors}}
+    {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+    {% endif %}
     <div class="row">
       <div class="text-right col-8">
 
@@ -43,6 +55,8 @@
   <thead>
     <tr>
       <th>Serie</th>
+      <th>Serie ENAP</th>
+      <th>Serie del proveedor</th>
       <th>Estado</th>
       <th>Pertenece</th>
     </tr>
@@ -50,7 +64,9 @@
   <tbody>
     {% for equipo in clase.equipo_set.all %}
     <tr {% if not equipo.estado %} class="alert alert-danger" {% endif %}>
-      <td><a href="{% url "DetailEquipo" equipo.id %}">{{equipo}}</a></td>
+      <td><a href="{% url "DetailEquipo" equipo.id %}">{{equipo.serie}}</a></td>
+      <td>{% if equipo.serieEnap %}{{equipo.serieEnap}} {% else %} - {% endif %}</td>             <!--  Serie de Enap -->
+      <td>{% if equipo.serieProveedor %}{{equipo.serieProveedor}} {% else %} - {% endif %}</td>   <!--  Serie del Proveedor -->
       <td >
         {% if equipo.estado %}Disponible {%else%} No disponible {% endif %}
       </td>

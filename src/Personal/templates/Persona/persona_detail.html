@@ -63,7 +63,7 @@
     </div>
     {% endif %}
   </div>
-</div>
+</div><!--  Datos de la persona -->
 
 <br>
 
@@ -101,10 +101,10 @@
     <tbody>
     {% for equipo in equipos %}
     <tr {% if equipo.alerta %} class="alert alert-danger"{% endif %}>
-      <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo}}</a></td>
+      <td><a href="{% url "DetailEquipo" equipo.equipo.id%}">{{equipo.equipo.serie}}</a></td>
       <td>{{equipo.equipo.clase}}</td>
       <td>{{equipo.fecha_termino.date}}</td>
-      <td>{% if equipo.alerta%} Vencido {% else %} Activo {% endif %}</td>
+      <td>{% if equipo.alerta%} Atrasado {% else %} Activo {% endif %}</td>
 
       <td>
         <form class="" action="{% url "Devolver" equipo.id %}" method="post">{% csrf_token %}
@@ -120,7 +120,7 @@
     {% endfor %}
     </tbody>
   </table>
-</div>
+</div><!--  Equipos -->
 
 
 {% if persona.Gestor %}
@@ -166,7 +166,7 @@
 
       </tbody>
     </table>
-  </form>
+  </form> <!--  Gestion -->
 
 {% endif %}
 

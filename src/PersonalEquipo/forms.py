@@ -14,7 +14,7 @@ class RelacionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RelacionForm, self).__init__(*args, **kwargs)
-        self.fields['equipo'].queryset   =   Equipo.objects.filter(estado = True)
+        self.fields['equipo'].queryset  =   Equipo.objects.filter(estado = True)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
